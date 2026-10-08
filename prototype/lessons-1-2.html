@@ -1,0 +1,453 @@
+<title>Прототип самоучителя</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: одна колонка как экран телефона; путь станции → урок → итог. */
+:root {
+  --bg: #f3f6fb;
+  --surface: #ffffff;
+  --ink: #14213d;
+  --muted: #5d6b86;
+  --line: #dde4f0;
+  --sea: #0e9f8e;
+  --sea-ink: #ffffff;
+  --sea-soft: #d9f3ef;
+  --sun: #ffb703;
+  --sun-soft: #fff1cc;
+  --bad: #d93a45;
+  --bad-soft: #fde2e4;
+  --good-soft: #d9f3ef;
+  --font-display: "Unbounded", "Nunito", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1627; --surface: #17223a; --ink: #eaf0fb; --muted: #9aa9c6; --line: #2a3a5c;
+    --sea: #2cc9b5; --sea-ink: #06231f; --sea-soft: #12403c; --sun: #ffc531; --sun-soft: #4a3a0c;
+    --bad: #ff6b74; --bad-soft: #4a1f26; --good-soft: #12403c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1627; --surface: #17223a; --ink: #eaf0fb; --muted: #9aa9c6; --line: #2a3a5c;
+  --sea: #2cc9b5; --sea-ink: #06231f; --sea-soft: #12403c; --sun: #ffc531; --sun-soft: #4a3a0c;
+  --bad: #ff6b74; --bad-soft: #4a1f26; --good-soft: #12403c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.45; margin: 0; padding-inline: 16px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--sea); outline-offset: 2px; }
+#app { max-width: 460px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; padding-block: 16px 24px; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.stack { display: flex; flex-direction: column; gap: 12px; }
+.tag { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+.btn { border: 0; border-radius: 16px; padding: 15px 20px; font-weight: 900; font-size: 17px; background: var(--sea); color: var(--sea-ink); box-shadow: 0 4px 0 rgba(0,0,0,.18); transition: transform .08s, box-shadow .08s; width: 100%; }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,.18); }
+.btn.ghost { background: transparent; color: var(--ink); border: 2px solid var(--line); box-shadow: none; }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.chip { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 2px solid var(--line); padding: 5px 12px; border-radius: 999px; font-weight: 800; font-size: 14px; }
+.card { background: var(--surface); border: 2px solid var(--line); border-radius: 22px; padding: 18px; }
+
+/* onboarding */
+.hero-word { font-family: var(--font-display); font-size: 40px; line-height: 1.1; }
+.level { display: flex; gap: 14px; align-items: center; text-align: left; width: 100%; background: var(--surface); border: 2px solid var(--line); border-radius: 20px; padding: 16px; }
+.level:hover { border-color: var(--sea); }
+.level b { display: block; font-size: 18px; }
+.level span.dot { width: 44px; height: 44px; border-radius: 14px; background: var(--sea-soft); display: grid; place-items: center; flex: none; font-family: var(--font-display); font-size: 15px; color: var(--sea); }
+.link { background: none; border: 0; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; padding: 8px; font-weight: 700; }
+
+/* home */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.meters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.meter { padding: 14px; }
+.meter .big { font-family: var(--font-display); font-size: 26px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.bar { height: 10px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 8px; }
+.bar > i { display: block; height: 100%; background: var(--sea); border-radius: 99px; transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.bar.sun > i { background: var(--sun); }
+.station { margin: 8px 0 4px; }
+.path { display: flex; flex-direction: column; gap: 14px; padding: 12px 0 8px; position: relative; }
+.node { display: flex; align-items: center; gap: 14px; background: none; border: 0; text-align: left; padding: 0; width: 100%; }
+.node .circle { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-size: 20px; background: var(--surface); border: 3px solid var(--line); flex: none; position: relative; }
+.node.done .circle { background: var(--sea); border-color: var(--sea); color: var(--sea-ink); }
+.node.current .circle { border-color: var(--sea); box-shadow: 0 0 0 6px var(--sea-soft); }
+.node.locked { opacity: .6; }
+.node .t b { display: block; font-size: 17px; }
+.node .t span { color: var(--muted); font-size: 14px; }
+.node:nth-child(even) { padding-left: 28px; }
+.sticky { position: sticky; bottom: 0; padding-top: 10px; padding-bottom: env(safe-area-inset-bottom, 0px); background: linear-gradient(to top, var(--bg) 70%, transparent); margin-top: auto; }
+
+/* lesson */
+.lhead { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.x { background: none; border: 0; font-size: 26px; line-height: 1; padding: 6px 10px; color: var(--muted); }
+.lhead .bar { flex: 1; margin: 0; height: 14px; }
+.stage { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.lbl { font-weight: 800; color: var(--muted); font-size: 14px; }
+.bigword { font-family: var(--font-display); font-size: 40px; line-height: 1.1; word-break: break-word; }
+.speak { width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--sea); color: var(--sea-ink); display: grid; place-items: center; font-size: 22px; box-shadow: 0 4px 0 rgba(0,0,0,.18); flex: none; }
+.row { display: flex; gap: 12px; align-items: center; }
+.opts { display: grid; gap: 10px; }
+.opts.two { grid-template-columns: 1fr 1fr; }
+.opt { background: var(--surface); border: 2px solid var(--line); border-radius: 16px; padding: 14px 12px; font-weight: 800; font-size: 18px; text-align: center; min-height: 60px; display: grid; place-items: center; }
+.opt:hover { border-color: var(--sea); }
+.opt.ok { background: var(--good-soft); border-color: var(--sea); }
+.opt.no { background: var(--bad-soft); border-color: var(--bad); }
+.opt svg { width: 72px; height: 56px; }
+.pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pairs .opt { font-size: 17px; }
+.opt.sel { border-color: var(--sea); background: var(--sea-soft); }
+.opt.gone { visibility: hidden; }
+.line { min-height: 64px; border-bottom: 2px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 0 10px; align-items: flex-start; }
+.tiles { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding-top: 8px; }
+.tile { background: var(--surface); border: 2px solid var(--line); border-bottom-width: 4px; border-radius: 12px; padding: 10px 16px; font-weight: 800; font-size: 20px; }
+.bubble { background: var(--surface); border: 2px solid var(--line); border-radius: 18px 18px 18px 6px; padding: 12px 14px; font-size: 20px; font-weight: 800; max-width: 88%; }
+.bubble.me { align-self: flex-end; border-radius: 18px 18px 6px 18px; background: var(--sea-soft); border-color: var(--sea); }
+.bubble small { display: block; color: var(--muted); font-weight: 700; font-size: 13px; }
+.blank { display: inline-block; min-width: 72px; border-bottom: 3px solid var(--ink); margin: 0 4px; text-align: center; }
+.insight { background: var(--sun-soft); border-color: var(--sun); }
+.insight .eq { display: grid; grid-template-columns: 1fr; gap: 8px; margin: 10px 0; }
+.insight .eq div { background: var(--surface); border-radius: 14px; padding: 10px 14px; font-weight: 800; }
+.insight .eq small { display: block; color: var(--muted); font-weight: 700; }
+mark { background: var(--sun); color: #1a1300; padding: 0 5px; border-radius: 6px; }
+details { margin-top: 6px; }
+summary { cursor: pointer; font-weight: 800; color: var(--muted); }
+.scene { border-radius: 22px; overflow: hidden; border: 2px solid var(--line); background: linear-gradient(160deg, #1f6f8b 0%, #99d1c4 100%); position: relative; aspect-ratio: 16/10; }
+.scene svg { width: 100%; height: 100%; display: block; }
+.scene .cap { position: absolute; left: 10px; right: 10px; bottom: 10px; background: rgba(10,20,40,.78); color: #fff; border-radius: 12px; padding: 8px 12px; font-weight: 800; }
+.scene .cap small { display: block; font-weight: 700; opacity: .8; }
+.note { font-size: 13px; color: var(--muted); }
+
+/* feedback sheet */
+.sheet { position: sticky; bottom: 0; margin-inline: -16px; padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px)); border-top: 2px solid var(--line); background: var(--surface); display: flex; flex-direction: column; gap: 12px; margin-top: auto; }
+.sheet.ok { background: var(--good-soft); border-color: var(--sea); }
+.sheet.no { background: var(--bad-soft); border-color: var(--bad); }
+.sheet b { font-size: 19px; }
+.foot { margin-top: auto; padding-top: 14px; }
+
+/* done */
+.burst { text-align: center; padding: 8px 0; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat { text-align: center; padding: 12px 6px; }
+.stat b { display: block; font-family: var(--font-display); font-size: 22px; }
+.stat span { font-size: 13px; color: var(--muted); font-weight: 700; }
+.wordlist { display: flex; flex-wrap: wrap; gap: 8px; }
+.toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); background: var(--ink); color: var(--bg); border-radius: 12px; padding: 10px 16px; font-weight: 700; font-size: 14px; max-width: 90vw; z-index: 5; }
+.modal-bg { position: fixed; inset: 0; background: rgba(10,16,30,.55); display: grid; place-items: end center; padding: 16px; z-index: 4; }
+.modal { background: var(--surface); border-radius: 24px; padding: 20px; max-width: 460px; width: 100%; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+.pop { animation: pop .35s cubic-bezier(.2,.9,.3,1.3); }
+</style>
+
+<div id="app"></div>
+
+<script>
+/* ---------- данные ---------- */
+const W = {
+  merhaba:{tr:'merhaba',ru:'привет',tx:'мерхаба'},
+  evet:{tr:'evet',ru:'да',tx:'эвет'},
+  hayir:{tr:'hayır',ru:'нет',tx:'хайыр'},
+  tamam:{tr:'tamam',ru:'хорошо, ладно',tx:'тамам'},
+  tesekkur:{tr:'teşekkürler',ru:'спасибо',tx:'тешеккюрлер'},
+  bu:{tr:'bu',ru:'это',tx:'бу'},
+  ne:{tr:'ne',ru:'что',tx:'нэ'},
+  ev:{tr:'ev',ru:'дом',tx:'эв',icon:'house'},
+  araba:{tr:'araba',ru:'машина',tx:'араба',icon:'car'}
+};
+const ICONS = {
+  house:'<svg viewBox="0 0 72 56" aria-hidden="true"><path d="M8 28 36 6l28 22" fill="none" stroke="#e5484d" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><rect x="16" y="28" width="40" height="24" rx="3" fill="#ffb703"/><rect x="31" y="35" width="10" height="17" rx="2" fill="#14213d"/></svg>',
+  car:'<svg viewBox="0 0 72 56" aria-hidden="true"><path d="M6 36c0-6 3-9 9-10l8-10c2-2 4-3 7-3h14c4 0 6 1 8 4l7 9c4 1 7 4 7 8v4H6z" fill="#e5484d"/><rect x="26" y="19" width="12" height="9" rx="2" fill="#cfe9f7"/><rect x="41" y="19" width="10" height="9" rx="2" fill="#cfe9f7"/><circle cx="20" cy="42" r="7" fill="#14213d"/><circle cx="54" cy="42" r="7" fill="#14213d"/><circle cx="20" cy="42" r="3" fill="#cbd5e1"/><circle cx="54" cy="42" r="3" fill="#cbd5e1"/></svg>'
+};
+const SCENE_SVG = '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect y="140" width="320" height="60" fill="#14213d" opacity=".25"/><circle cx="90" cy="86" r="26" fill="#ffd9b8"/><path d="M60 70c4-26 52-26 60 0-14-8-44-8-60 0z" fill="#3b2a24"/><rect x="62" y="112" width="56" height="70" rx="22" fill="#e5484d"/><circle cx="232" cy="90" r="26" fill="#f3c9a0"/><path d="M204 84c2-30 56-30 56 4-18-14-38-14-56-4z" fill="#14213d"/><rect x="204" y="116" width="56" height="66" rx="22" fill="#ffb703"/><circle cx="82" cy="88" r="2.6" fill="#14213d"/><circle cx="98" cy="88" r="2.6" fill="#14213d"/><circle cx="224" cy="92" r="2.6" fill="#14213d"/><circle cx="240" cy="92" r="2.6" fill="#14213d"/><path d="M84 100q6 5 12 0" stroke="#14213d" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M226 104q6 5 12 0" stroke="#14213d" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>';
+
+const LESSONS = [
+  {n:1,title:'Ты уже знаешь турецкий',sub:'5 слов из сериалов',playable:true},
+  {n:2,title:'Что это?',sub:'bu, ne, ev, araba',playable:true},
+  {n:3,title:'Какой он?',sub:'Ev büyük — без слова «есть»',goal:'Прилагательные büyük, küçük, hızlı, kırmızı. Открытие: в турецком «дом большой» говорят без слова «есть» — Ev büyük.'},
+  {n:4,title:'Один — много',sub:'-ler / -lar',goal:'Множественное число: ev → evler, araba → arabalar. Первое открытие про гармонию гласных.'},
+  {n:5,title:'Мой дом, моя машина',sub:'evim, arabam',goal:'«Мой» как окончание и без рода: evim, arabam. Bu benim evim.'},
+  {n:6,title:'Мой дом красный',sub:'Evim kırmızı',goal:'Соединяем «мой» и описание: Evim kırmızı. Arabam hızlı.'},
+  {n:7,title:'Твой',sub:'evin, araban',goal:'«Твой»: окончание -in / -n. Senin evin büyük.'},
+  {n:8,title:'Финал станции',sub:'Мини-сцена',goal:'Всё пройденное в одном диалоге и первая понятая сцена.'}
+];
+
+const STEPS = {
+ 1: [
+  {t:'teach',w:'merhaba'},{t:'teach',w:'evet'},{t:'teach',w:'hayir'},{t:'teach',w:'tamam'},{t:'teach',w:'tesekkur'},
+  {t:'choose',mode:'listen',w:'tamam',opts:['tamam','evet','merhaba']},
+  {t:'choose',mode:'listen',w:'hayir',opts:['hayir','tesekkur','evet']},
+  {t:'choose',mode:'word',w:'merhaba',opts:['merhaba','tamam','hayir']},
+  {t:'pairs',ws:['merhaba','evet','hayir','tamam','tesekkur']},
+  {t:'dialog',lines:[{who:'a',tr:'Merhaba!',ru:'Привет!'},{who:'b',tr:'___!',ru:'Привет!',blank:'merhaba'}],opts:['merhaba','hayir','tesekkur']},
+  {t:'dialog',lines:[{who:'a',tr:'Tamam?',ru:'Ладно?'},{who:'b',tr:'___, tamam.',ru:'Да, ладно.',blank:'evet'}],opts:['evet','merhaba','hayir']},
+  {t:'scene',tr:'Tamam, teşekkürler.',ru:'Хорошо, спасибо.'}
+ ],
+ 2: [
+  {t:'label',text:'Разминка: слова прошлого урока'},
+  {t:'choose',mode:'word',w:'evet',opts:['evet','hayir','tamam']},
+  {t:'choose',mode:'listen',w:'tesekkur',opts:['tesekkur','merhaba','hayir']},
+  {t:'label',text:'Новые слова'},
+  {t:'teach',w:'bu'},{t:'teach',w:'ne'},{t:'teach',w:'ev'},{t:'teach',w:'araba'},
+  {t:'pic',w:'ev',opts:['araba','ev']},
+  {t:'pic',w:'araba',opts:['ev','araba']},
+  {t:'insight'},
+  {t:'build',tr:['Bu','araba'],ru:'Это машина.',extra:['ne']},
+  {t:'build',tr:['Bu','ne'],ru:'Что это?',extra:['ev']},
+  {t:'dialog',lines:[{who:'a',tr:'Merhaba! Bu ne?',ru:'Привет! Что это?'},{who:'b',tr:'Bu ___.',ru:'Это дом.',blank:'ev'}],opts:['ev','araba','tamam']},
+  {t:'dialog',lines:[{who:'a',tr:'Bu araba.',ru:'Это машина.'},{who:'b',tr:'Tamam, ___.',ru:'Хорошо, спасибо.',blank:'tesekkur'}],opts:['tesekkur','ev','ne']},
+  {t:'scene',tr:'Merhaba! Bu ne? — Bu araba.',ru:'Привет! Что это? — Это машина.'}
+ ]
+};
+const NEW_WORDS = {1:['merhaba','evet','hayir','tamam','tesekkur'],2:['bu','ne','ev','araba']};
+const COVER_GAIN = {1:4,2:7};
+
+/* ---------- состояние ---------- */
+const S = {screen:'onboard',level:null,done:{},words:[],xp:0,streak:1,lesson:null,queue:[],i:0,total:0,mistakes:0,answered:false,fixed:false};
+try { const raw = localStorage.getItem('proto-v1'); if (raw) { const o = JSON.parse(raw); Object.assign(S,{level:o.level,done:o.done||{},words:o.words||[],xp:o.xp||0}); if (o.level) S.screen='home'; } } catch(e){}
+function save(){ try { localStorage.setItem('proto-v1', JSON.stringify({level:S.level,done:S.done,words:S.words,xp:S.xp})); } catch(e){} }
+const $ = (s,r=document)=>r.querySelector(s);
+const app = $('#app');
+const coverage = ()=>Object.keys(S.done).reduce((a,k)=>a+COVER_GAIN[k],0);
+const nextLesson = ()=>{ for (const l of LESSONS){ if(!S.done[l.n]) return l; } return null; };
+
+/* ---------- звук ---------- */
+function speak(text){
+  try {
+    if(!('speechSynthesis' in window)) throw 0;
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text); u.lang='tr-TR'; u.rate=.85;
+    const v = speechSynthesis.getVoices().find(v=>v.lang && v.lang.toLowerCase().startsWith('tr'));
+    if (v) u.voice=v; else toast('В этом браузере нет турецкого голоса. В продукте будет качественная озвучка.');
+    speechSynthesis.speak(u);
+  } catch(e){ toast('Озвучка недоступна в этом браузере. В продукте она будет.'); }
+}
+let toastT; function toast(msg){ clearTimeout(toastT); $('.toast')?.remove(); const d=document.createElement('div'); d.className='toast'; d.textContent=msg; document.body.appendChild(d); toastT=setTimeout(()=>d.remove(),2600); }
+const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+
+/* ---------- экраны ---------- */
+function render(){
+  if (S.screen==='onboard') return onboard();
+  if (S.screen==='home') return home();
+  if (S.screen==='lesson') return step();
+  if (S.screen==='done') return finish();
+}
+
+function onboard(){
+  app.innerHTML = `
+  <div class="stack" style="margin-top:6vh">
+    <span class="tag">Прототип · приватный</span>
+    <h1 class="hero-word">Выучи язык, просто нажимая «Продолжить»</h1>
+    <p class="muted">Сначала скажи, с чего начать. Это можно поменять в любой момент.</p>
+    <button class="level" data-l="zero"><span class="dot">0</span><div><b>С нуля</b><span class="muted">Ничего не знаю, начну с первых слов</span></div></button>
+    <button class="level" data-l="some"><span class="dot">A</span><div><b>Что-то знаю</b><span class="muted">Знаю слова и фразы, хочу навести порядок</span></div></button>
+    <button class="level" data-l="most"><span class="dot">B</span><div><b>Понимаю, но не всё</b><span class="muted">Смотрю сериалы, хочу понимать больше</span></div></button>
+    <button class="link" id="help">Не знаю свой уровень — помогите определить</button>
+  </div>`;
+  app.querySelectorAll('.level').forEach(b=>b.onclick=()=>{ S.level=b.dataset.l; save(); S.screen='home'; render(); if(S.level!=='zero') toast('В прототипе доступен путь для новичка. Остальные группы — позже.'); });
+  $('#help').onclick=()=>modal('Опциональный тест','<p>Здесь будет короткий необязательный тест на 8–10 вопросов. Его можно пропустить: выбор уровня выше всегда остаётся за пользователем.</p>');
+}
+
+function home(){
+  const nl = nextLesson();
+  const words = S.words.length;
+  const cov = coverage();
+  app.innerHTML = `
+  <div class="top">
+    <span class="chip">🔥 ${S.streak} день</span>
+    <span class="chip">⭐ ${S.xp} XP</span>
+    <button class="link" id="lvl">Сменить уровень</button>
+  </div>
+  <div class="meters">
+    <div class="card meter"><span class="tag">Слов знаю</span><div class="big">${words}</div><div class="bar sun"><i style="width:${Math.min(100,words/25*100)}%"></i></div><span class="note">цель станции: 25</span></div>
+    <div class="card meter"><span class="tag">Понимаю речи</span><div class="big">~${cov}%</div><div class="bar"><i style="width:${cov*2.2}%"></i></div><span class="note">условные цифры прототипа</span></div>
+  </div>
+  <div class="station">
+    <span class="tag">Станция 1 из 8</span>
+    <h2 style="margin-top:4px">Первый контакт</h2>
+    <p class="muted" style="margin-top:4px">${Object.keys(S.done).length} из 8 уроков · в конце: «Мой дом красный» и первая сцена</p>
+  </div>
+  <div class="path">
+    ${LESSONS.map(l=>{
+      const st = S.done[l.n] ? 'done' : (nl && nl.n===l.n ? 'current' : 'locked');
+      return `<button class="node ${st}" data-n="${l.n}"><span class="circle">${S.done[l.n]?'✓':l.n}</span><span class="t"><b>${l.title}</b><span>${l.sub}</span></span></button>`;
+    }).join('')}
+  </div>
+  <div class="sticky stack">
+    ${nl ? `<button class="btn" id="go">${S.done[1]||S.done[2]?'Продолжить':'Начать'} · урок ${nl.n}</button>` : ''}
+    <button class="btn ghost" id="rev">Повторить пройденное</button>
+  </div>`;
+  $('#go')?.addEventListener('click',()=>startLesson(nl));
+  $('#lvl').onclick=()=>{ S.screen='onboard'; render(); };
+  $('#rev').onclick=()=>{ if(!S.words.length) return toast('Пока нечего повторять. Пройди первый урок.'); const ids=shuffle(S.words).slice(0,5); const q=ids.map(w=>({t:'choose',mode:Math.random()<.5?'listen':'word',w,opts:shuffle([w,...shuffle(S.words.filter(x=>x!==w)).slice(0,2)])})); beginQueue({n:0,title:'Повторение'},q); };
+  app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{
+    const l = LESSONS[+b.dataset.n-1];
+    if (l.playable) return startLesson(l);
+    modal(`Урок ${l.n}. ${l.title}`,`<p>${l.goal}</p><p class="note" style="margin-top:10px">В прототипе этот урок не собран. Он покажет, как работает спираль: повтор прошлого + 1 новая идея.</p>`);
+  });
+}
+
+function startLesson(l){ if(!l) return; if(!l.playable) return modal(`Урок ${l.n}. ${l.title}`,`<p>${l.goal}</p>`); beginQueue(l, STEPS[l.n].map(x=>({...x}))); }
+function beginQueue(l,q){ S.lesson=l; S.queue=q; S.i=0; S.total=q.filter(x=>x.t!=='label').length; S.mistakes=0; S.answered=false; S.screen='lesson'; S.seen=0; render(); }
+
+function shell(inner, foot){
+  const prog = S.total ? Math.min(100, S.seen/S.total*100) : 0;
+  app.innerHTML = `
+  <div class="lhead"><button class="x" id="quit" aria-label="Закрыть урок">×</button><div class="bar"><i style="width:${prog}%"></i></div></div>
+  <div class="stage pop" key="${S.i}">${inner}</div>
+  <div id="foot">${foot||''}</div>`;
+  $('#quit').onclick=()=>{ S.screen='home'; render(); };
+}
+const next = ()=>{ S.i++; S.answered=false; S.fixed=false; if(S.i>=S.queue.length){ S.screen='done'; } render(); };
+function advanceFoot(label='Дальше'){ $('#foot').innerHTML=`<div class="foot"><button class="btn" id="nx">${label}</button></div>`; $('#nx').onclick=next; }
+function sheet(ok,msg,detail){
+  $('#foot').innerHTML = `<div class="sheet ${ok?'ok':'no'}"><b>${ok?'Верно!':'Почти'}</b>${msg?`<span>${msg}</span>`:''}<button class="btn" id="nx">Дальше</button></div>`;
+  $('#nx').onclick=next;
+}
+function wrong(st){ S.mistakes++; if(!st._again){ S.queue.push({...st,_again:true}); S.total++; } }
+
+function step(){
+  const st = S.queue[S.i];
+  if (!st) { S.screen='done'; return render(); }
+  if (st.t!=='label') S.seen = S.queue.slice(0,S.i).filter(x=>x.t!=='label').length;
+  const fn = {label:sLabel,teach:sTeach,choose:sChoose,pic:sPic,pairs:sPairs,build:sBuild,dialog:sDialog,insight:sInsight,scene:sScene}[st.t];
+  fn(st);
+}
+
+function sLabel(st){ shell(`<div style="margin:auto 0" class="stack"><span class="tag">${st.text.split(':')[0]}</span><h2>${st.text.includes(':')?st.text.split(':')[1].trim():''}</h2></div>`, `<div class="foot"><button class="btn" id="nx">Поехали</button></div>`); $('#nx').onclick=next; }
+
+function sTeach(st){
+  const w=W[st.w];
+  shell(`<span class="lbl">Новое слово</span>
+    <div class="card stack" style="align-items:flex-start">
+      ${w.icon?`<div style="width:96px">${ICONS[w.icon].replace('<svg','<svg style="width:96px;height:75px"')}</div>`:''}
+      <div class="row"><button class="speak" id="sp" aria-label="Послушать">▶</button><div><div class="bigword">${w.tr}</div><div class="muted">[${w.tx}]</div></div></div>
+      <h3>${w.ru}</h3>
+    </div>
+    <p class="note">Нажми ▶ и повтори вслух.</p>`,
+    `<div class="foot"><button class="btn" id="nx">Запомнил</button></div>`);
+  $('#sp').onclick=()=>speak(w.tr); $('#nx').onclick=()=>{ speak(w.tr); next(); };
+}
+
+function sChoose(st){
+  const w=W[st.w];
+  const opts = shuffle(st.opts);
+  const head = st.mode==='listen'
+    ? `<span class="lbl">Что ты услышал?</span><div class="row"><button class="speak" id="sp" aria-label="Послушать">▶</button><span class="muted">нажми и выбери перевод</span></div>`
+    : `<span class="lbl">Выбери перевод</span><div class="bigword">${w.tr}</div>`;
+  shell(`${head}<div class="opts">${opts.map(o=>`<button class="opt" data-w="${o}">${W[o].ru}</button>`).join('')}</div>`);
+  if(st.mode==='listen'){ $('#sp').onclick=()=>speak(w.tr); setTimeout(()=>speak(w.tr),250); }
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(S.answered) return; S.answered=true;
+    const ok=b.dataset.w===st.w; b.classList.add(ok?'ok':'no');
+    if(!ok){ app.querySelector(`[data-w="${st.w}"]`).classList.add('ok'); wrong(st); }
+    sheet(ok, ok?'':`Правильно: ${w.tr} — ${w.ru}`);
+  });
+}
+
+function sPic(st){
+  const w=W[st.w];
+  shell(`<span class="lbl">Нажми на то, что услышишь</span>
+    <div class="row"><button class="speak" id="sp" aria-label="Послушать">▶</button><span class="muted">Bu …</span></div>
+    <div class="opts two">${shuffle(st.opts).map(o=>`<button class="opt" data-w="${o}" aria-label="${W[o].ru}">${ICONS[W[o].icon]}</button>`).join('')}</div>`);
+  $('#sp').onclick=()=>speak('Bu '+w.tr); setTimeout(()=>speak('Bu '+w.tr),250);
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(S.answered) return; S.answered=true;
+    const ok=b.dataset.w===st.w; b.classList.add(ok?'ok':'no');
+    if(!ok){ app.querySelector(`[data-w="${st.w}"]`).classList.add('ok'); wrong(st); }
+    sheet(ok, ok?'Bu '+w.tr+' — это '+w.ru:`Это было: Bu ${w.tr} — ${w.ru}`);
+  });
+}
+
+function sPairs(st){
+  const L = shuffle(st.ws), R = shuffle(st.ws); let selL=null, left=st.ws.length;
+  shell(`<span class="lbl">Найди пары</span>
+    <div class="pairs"><div class="opts" id="cl">${L.map(w=>`<button class="opt" data-w="${w}">${W[w].tr}</button>`).join('')}</div>
+    <div class="opts" id="cr">${R.map(w=>`<button class="opt" data-w="${w}">${W[w].ru}</button>`).join('')}</div></div>`);
+  const cl=$('#cl'), cr=$('#cr');
+  cl.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{ cl.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); selL=b; speak(W[b.dataset.w].tr); });
+  cr.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(!selL) return;
+    if(selL.dataset.w===b.dataset.w){ selL.classList.add('ok'); b.classList.add('ok'); const a=selL; setTimeout(()=>{a.classList.add('gone'); b.classList.add('gone');},250); selL=null; if(--left===0) setTimeout(()=>advanceFoot('Дальше'),300); }
+    else { b.classList.add('no'); S.mistakes++; setTimeout(()=>b.classList.remove('no'),350); }
+  });
+}
+
+function sBuild(st){
+  const tiles = shuffle([...st.tr,...(st.extra||[])]); const ans=[];
+  shell(`<span class="lbl">Собери по-турецки</span><h3>${st.ru}</h3>
+    <div class="line" id="ln"></div><div class="tiles" id="tl"></div>`, `<div class="foot"><button class="btn" id="ck" disabled>Проверить</button></div>`);
+  const ln=$('#ln'), tl=$('#tl'), ck=$('#ck');
+  const draw2=()=>{ ln.innerHTML=ans.map((w,i)=>`<button class="tile" data-a="${i}">${w}</button>`).join(''); tl.innerHTML=tiles.map((w,i)=>`<button class="tile" data-t="${i}">${w}</button>`).join(''); ck.disabled=!ans.length;
+    ln.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{ if(S.answered) return; tiles.push(ans.splice(+b.dataset.a,1)[0]); draw2(); });
+    tl.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{ if(S.answered) return; const w=tiles.splice(+b.dataset.t,1)[0]; ans.push(w); draw2(); speak(w); }); };
+  draw2();
+  ck.onclick=()=>{ if(S.answered) return; S.answered=true; const ok=ans.join(' ')===st.tr.join(' '); if(!ok) wrong(st); speak(st.tr.join(' ')); sheet(ok, ok?`${st.tr.join(' ')}.`:`Правильно: ${st.tr.join(' ')}`); };
+}
+
+function sDialog(st){
+  const blankLine = st.lines.find(l=>l.blank);
+  shell(`<span class="lbl">Закончи диалог</span>
+    <div class="stack">${st.lines.map(l=>`<div class="bubble ${l.who==='b'?'me':''}">${l.tr.replace('___','<span class="blank" id="bl">&nbsp;</span>')}<small>${l.ru}</small></div>`).join('')}</div>
+    <div class="opts" style="margin-top:8px">${shuffle(st.opts).map(o=>`<button class="opt" data-w="${o}">${W[o].tr}</button>`).join('')}</div>`);
+  app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    if(S.answered) return; S.answered=true;
+    const ok=b.dataset.w===blankLine.blank; b.classList.add(ok?'ok':'no');
+    $('#bl').textContent=W[blankLine.blank].tr; if(!ok){ app.querySelector(`[data-w="${blankLine.blank}"]`).classList.add('ok'); wrong(st); }
+    speak(blankLine.tr.replace('___',W[blankLine.blank].tr));
+    sheet(ok, ok?'':`Правильно: ${W[blankLine.blank].tr}`);
+  });
+}
+
+function sInsight(){
+  shell(`<span class="tag">Заметил?</span>
+    <div class="card insight">
+      <h3>Слова «есть» нет</h3>
+      <div class="eq"><div>Bu <mark>ev</mark>.<small>Это дом. — в турецком только «это» + «дом»</small></div>
+      <div>Bu <mark>araba</mark>.<small>Это машина.</small></div></div>
+      <p>Назвать предмет можно двумя словами. Связка между ними не нужна.</p>
+      <details><summary>Подробнее</summary><p style="margin-top:8px">В турецком в 3-м лице «есть/является» чаще всего не произносят. Дальше мы увидим то же самое в предложениях вроде «Ev büyük» — «Дом большой».</p></details>
+    </div>`, `<div class="foot"><button class="btn" id="nx">Понятно</button></div>`);
+  $('#nx').onclick=next;
+}
+
+function sScene(st){
+  shell(`<span class="lbl">Сцена</span>
+    <div class="scene">${SCENE_SVG}<div class="cap">${st.tr}<small>${st.ru}</small></div></div>
+    <button class="btn ghost" id="pl">▶ Послушать реплику</button>
+    <p class="note">Макет. В продукте здесь будет настоящая реплика из сериала, озвученная заново (TTS) и показанная в стилизованной анимации.</p>`, `<div class="foot"><button class="btn" id="nx">Закончить урок</button></div>`);
+  $('#pl').onclick=()=>speak(st.tr.replace(' — ',' '));
+  $('#nx').onclick=next;
+}
+
+function finish(){
+  const l=S.lesson;
+  if(l.n){ S.done[l.n]=true; (NEW_WORDS[l.n]||[]).forEach(w=>{ if(!S.words.includes(w)) S.words.push(w); }); S.xp+=40-Math.min(S.mistakes*3,20); save(); }
+  const nw = l.n?NEW_WORDS[l.n]:[];
+  const acc = Math.max(40, Math.round(100 - S.mistakes/Math.max(S.total,1)*100));
+  app.innerHTML = `
+  <div class="burst pop stack" style="margin-top:4vh">
+    <span class="tag">${l.n?`Урок ${l.n} пройден`:'Повторение завершено'}</span>
+    <h1 class="hero-word">${l.n?'Отлично!':'Так держать!'}</h1>
+  </div>
+  <div class="stats">
+    <div class="card stat"><b>+${l.n?40-Math.min(S.mistakes*3,20):10}</b><span>XP</span></div>
+    <div class="card stat"><b>${acc}%</b><span>точность</span></div>
+    <div class="card stat"><b>${S.words.length}</b><span>слов знаю</span></div>
+  </div>
+  ${l.n?`<div class="card stack" style="margin-top:12px"><span class="tag">Понимание речи</span><div class="row"><b style="font-family:var(--font-display);font-size:24px">~${coverage()}%</b><span class="muted">слов типичного диалога</span></div><div class="bar"><i id="cv" style="width:${(coverage()-COVER_GAIN[l.n])*2.2}%"></i></div></div>
+  <div class="card stack" style="margin-top:12px"><span class="tag">Новые слова</span><div class="wordlist">${nw.map(w=>`<span class="chip">${W[w].tr}</span>`).join('')}</div><p class="note">Эти слова вернутся в следующих уроках и в автоповторении.</p></div>`:''}
+  <div class="sticky stack"><button class="btn" id="hm">${l.n && nextLesson() ? `Дальше · урок ${nextLesson().n}` : 'На главную'}</button></div>`;
+  setTimeout(()=>{ const c=$('#cv'); if(c) c.style.width=coverage()*2.2+'%'; },120);
+  $('#hm').onclick=()=>{ const nl=nextLesson(); if(l.n && nl && nl.playable) startLesson(nl); else { S.screen='home'; render(); } };
+}
+
+function modal(title,html){
+  const bg=document.createElement('div'); bg.className='modal-bg';
+  bg.innerHTML=`<div class="modal stack"><h3>${title}</h3>${html}<button class="btn" id="mc">Понятно</button></div>`;
+  document.body.appendChild(bg); bg.onclick=e=>{ if(e.target===bg) bg.remove(); }; $('#mc',bg).onclick=()=>bg.remove();
+}
+if ('speechSynthesis' in window) speechSynthesis.getVoices();
+render();
+</script>
