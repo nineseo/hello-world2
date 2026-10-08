@@ -190,6 +190,25 @@ summary { cursor: pointer; font-weight: 800; color: var(--muted); }
 .modal-bg { position: fixed; inset: 0; background: rgba(5,6,24,.6); display: grid; place-items: end center; padding: 16px; z-index: 5; }
 .modal { background: var(--sheet); border: 1.5px solid var(--line); border-radius: 30px; padding: 22px; max-width: 460px; width: 100%; animation: rise .25s ease-out; }
 .modal h3 { font-size: 20px; }
+.modal { max-height: 88vh; overflow-y: auto; }
+.today { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+.today h3 { font-size: 20px; margin-top: 2px; }
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 10px 0 8px; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); font-weight: 800; }
+.day i { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-strong); display: grid; place-items: center; border: 2px solid var(--line); }
+.day i svg { width: 18px; height: 18px; }
+.day.on i { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); }
+.day.today i { border-color: var(--violet); }
+.day.today { color: var(--ink); }
+.shield { display: inline-flex; align-items: center; gap: 6px; }
+.shield svg { width: 26px; height: 26px; }
+.mist { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
+.mist .btn { width: auto; align-self: flex-start; padding: 12px 20px; }
+.seg { display: flex; gap: 8px; }
+.seg button { flex: 1; padding: 11px 6px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--surface); font-weight: 800; color: var(--ink); }
+.seg button.on { background: var(--cta); color: var(--cta-ink); border-color: var(--cta); }
+.set-h { font-family: var(--font-display); font-weight: 600; font-size: 15px; margin-top: 4px; }
+.btn.small { padding: 12px 14px; font-size: 15px; }
 
 @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes rise { from { transform: translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -227,6 +246,7 @@ const I = {
   gear:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
   play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h3.5L13 19V5L8.5 9z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
   flame:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-4 2-7 2 1 3 2 4 4 1-3 1-6 0-9z" fill="#ff9f43"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6z" fill="#7be8ff"/><path d="M8.3 12l2.6 2.6 4.8-5.2" fill="none" stroke="#0f3a5a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   star:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="#ffc93c"/></svg>'
 };
 function mascot(mood='happy', size=64){
@@ -277,18 +297,56 @@ const NEW_WORDS = {1:['merhaba','evet','hayir','tamam','tesekkur'],2:['bu','ne',
 const COVER_GAIN = {1:4,2:7};
 
 /* ---------- состояние ---------- */
-const S = {screen:'onboard',level:null,done:{},words:[],xp:0,streak:1,lesson:null,queue:[],i:0,total:0,mistakes:0,answered:false,seen:0};
-const KEY = 'proto-v2';
-try { const raw = localStorage.getItem(KEY); if (raw) { const o = JSON.parse(raw); Object.assign(S,{level:o.level,done:o.done||{},words:o.words||[],xp:o.xp||0}); if (o.level) S.screen='home'; } } catch(e){}
-function save(){ try { localStorage.setItem(KEY, JSON.stringify({level:S.level,done:S.done,words:S.words,xp:S.xp})); } catch(e){} }
+const S = {screen:'onboard',level:null,done:{},words:[],xp:0,streak:0,lastDay:null,freezes:1,days:[],goal:1,today:{d:'',n:0},weak:{},remind:{on:false,t:'19:00'},lesson:null,queue:[],i:0,total:0,mistakes:0,answered:false,seen:0};
+const KEY = 'proto-v3';
+try { const raw = localStorage.getItem(KEY); if (raw) { const o = JSON.parse(raw); Object.assign(S,{level:o.level,done:o.done||{},words:o.words||[],xp:o.xp||0,streak:o.streak||0,lastDay:o.lastDay||null,freezes:o.freezes??1,days:o.days||[],goal:o.goal||1,today:o.today||{d:'',n:0},weak:o.weak||{},remind:o.remind||{on:false,t:'19:00'}}); if (o.level) S.screen='home'; } } catch(e){}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify({level:S.level,done:S.done,words:S.words,xp:S.xp,streak:S.streak,lastDay:S.lastDay,freezes:S.freezes,days:S.days,goal:S.goal,today:S.today,weak:S.weak,remind:S.remind})); } catch(e){} }
 function resetProgress(full){
-  S.done={}; S.words=[]; S.xp=0; S.streak=1; if(full){ S.level=null; S.screen='onboard'; } else S.screen='home';
+  S.done={}; S.words=[]; S.xp=0; S.streak=0; S.lastDay=null; S.freezes=1; S.days=[]; S.today={d:'',n:0}; S.weak={}; if(full){ S.level=null; S.screen='onboard'; } else S.screen='home';
   try { localStorage.removeItem(KEY); } catch(e){} save(); render();
 }
 const $ = (s,r=document)=>r.querySelector(s);
 const app = $('#app');
 const coverage = ()=>Object.keys(S.done).reduce((a,k)=>a+COVER_GAIN[k],0);
 const nextLesson = ()=>LESSONS.find(l=>!S.done[l.n]) || null;
+const pad = n => String(n).padStart(2,'0');
+const dstr = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const todayStr = () => dstr(new Date());
+const dayDiff = (a,b) => Math.round((Date.parse(b)-Date.parse(a))/864e5);
+const shiftDays = (s,n) => { const d=new Date(s+'T12:00:00'); d.setDate(d.getDate()+n); return dstr(d); };
+const todayCount = () => S.today.d===todayStr() ? S.today.n : 0;
+/* Серия: пропуск закрывается заморозкой, иначе серия обнуляется */
+function checkStreak(){
+  if(!S.lastDay || S.streak===0) return null;
+  const gap = dayDiff(S.lastDay, todayStr());
+  if(gap<=1) return null;
+  const missed = gap-1;
+  if(S.freezes>=missed){ S.freezes-=missed; S.lastDay=shiftDays(todayStr(),-1); save(); return {type:'saved',missed}; }
+  const old=S.streak; S.streak=0; save(); return {type:'lost',old};
+}
+function markPractice(){
+  checkStreak();
+  const t=todayStr(); if(S.today.d!==t) S.today={d:t,n:0};
+  S.today.n++;
+  let bonus=null;
+  if(S.lastDay!==t){
+    S.streak = (S.lastDay && S.streak>0 && dayDiff(S.lastDay,t)===1) ? S.streak+1 : 1;
+    S.lastDay=t; S.days=[...S.days.filter(x=>x!==t),t].slice(-30);
+    if(S.streak%7===0 && S.freezes<2){ S.freezes++; bonus='freeze'; }
+  }
+  save(); return bonus;
+}
+/* Ошибки: слово копит «вес», в режиме тренировки правильный ответ его снижает */
+function grade(w,ok){
+  if(!w) return;
+  if(!ok){ S.weak[w]=Math.min(3,(S.weak[w]||0)+1); save(); }
+  else if(S.lesson && S.lesson.mode==='mistakes' && S.weak[w]){ S.weak[w]--; if(S.weak[w]<=0) delete S.weak[w]; save(); }
+}
+function distract(w,n=2){
+  const all=Object.keys(W).filter(x=>x!==w), known=all.filter(x=>S.words.includes(x));
+  return [...shuffle(known),...shuffle(all.filter(x=>!known.includes(x)))].slice(0,n);
+}
+const quizFor = ids => ids.map(w=>({t:'choose',mode:Math.random()<.5?'listen':'word',w,opts:shuffle([w,...distract(w)])}));
 const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 
 /* ---------- звук и мелочи ---------- */
@@ -332,12 +390,14 @@ function onboard(){
 }
 
 function home(){
+  const sres = checkStreak();
   const nl = nextLesson(), words = S.words.length, cov = coverage(), dn = Object.keys(S.done).length;
   const C = 2*Math.PI*34, off = C*(1-dn/8);
   app.innerHTML = `
   <div class="top">
-    <span class="chip">${I.flame} ${S.streak}</span>
-    <span class="chip">${I.star} ${S.xp}</span>
+    <span class="chip" title="Серия дней">${I.flame} ${S.streak}</span>
+    <span class="chip" title="Заморозки серии">${I.shield} ${S.freezes}</span>
+    <span class="chip" title="XP">${I.star} ${S.xp}</span>
     <span class="sp"></span>
     <button class="icon-btn" id="set" aria-label="Настройки">${I.gear}</button>
   </div>
@@ -348,10 +408,12 @@ function home(){
     <p>Слова, «это», «мой дом красный»</p>
     <div class="mini"><button class="btn" id="go" ${nl?'':'disabled'}>${nl? (dn?'Продолжить':'Начать')+' · урок '+nl.n : 'Станция пройдена'}</button></div>
   </div>
+  ${todayCard()}
   <div class="meters">
     <div class="card meter"><span class="tag">Слов знаю</span><div class="big">${words}</div><div class="bar sun"><i style="width:${Math.min(100,words/25*100)}%"></i></div><span class="note">цель станции: 25</span></div>
     <div class="card meter"><span class="tag">Понимаю речи</span><div class="big">~${cov}%</div><div class="bar"><i style="width:${Math.min(100,cov*2.2)}%"></i></div><span class="note">условно, для макета</span></div>
   </div>
+  ${mistakesCard()}
   <div class="section-h"><h2>Путь</h2><span class="note">${dn} из 8 уроков</span></div>
   <div class="path">
     ${LESSONS.map(l=>{
@@ -362,7 +424,9 @@ function home(){
   <div class="sticky"><button class="btn ghost" id="rev">Повторить пройденное</button></div>`;
   $('#go').onclick=()=>startLesson(nl);
   $('#set').onclick=settings;
-  $('#rev').onclick=()=>{ if(!S.words.length) return toast('Пока нечего повторять. Пройди первый урок.'); const q=shuffle(S.words).slice(0,5).map(w=>({t:'choose',mode:Math.random()<.5?'listen':'word',w,opts:shuffle([w,...shuffle(S.words.filter(x=>x!==w)).slice(0,2)])})); beginQueue({n:0,title:'Повторение'},q); };
+  $('#rev').onclick=()=>{ if(!S.words.length) return toast('Пока нечего повторять. Пройди первый урок.'); beginQueue({n:0,title:'Повторение'}, quizFor(shuffle(S.words).slice(0,5))); };
+  $('#mis')?.addEventListener('click',()=>startMistakes());
+  if(sres) setTimeout(()=>{ if(sres.type==='saved') toast(`Заморозка спасла серию: пропущено дней — ${sres.missed}`); else comeback(sres.old); },350);
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{
     const l = LESSONS[+b.dataset.n-1];
     if (l.playable) return startLesson(l);
@@ -370,13 +434,49 @@ function home(){
   });
 }
 
+function todayCard(){
+  const t=todayStr(), cnt=todayCount(), done=cnt>=S.goal;
+  const days=[6,5,4,3,2,1,0].map(k=>{ const d=shiftDays(t,-k); const wd=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][new Date(d+'T12:00:00').getDay()]; return `<div class="day ${S.days.includes(d)?'on':''} ${k===0?'today':''}"><i>${S.days.includes(d)?I.check:''}</i>${wd}</div>`; }).join('');
+  return `<div class="card today">
+    <div class="row" style="justify-content:space-between"><div><span class="tag">Сегодня</span><h3>${done?'Цель дня выполнена!':`Цель дня: ${cnt} из ${S.goal}`}</h3></div><span class="shield" title="Заморозка сохраняет серию, если пропустить день">${I.shield}<b>${S.freezes}</b></span></div>
+    <div class="week">${days}</div>
+    <div class="bar"><i style="width:${Math.min(100,cnt/S.goal*100)}%"></i></div>
+    <span class="note">Занятие — урок, повторение или тренировка ошибок. Заморозка спасает серию при пропуске дня.</span>
+  </div>`;
+}
+function mistakesCard(){
+  const wk=Object.keys(S.weak);
+  return `<div class="card mist"><div><span class="tag">Мои ошибки</span><h3 style="font-size:19px;margin-top:2px">${wk.length?`${wk.length} ${wk.length===1?'слово':'слов'} для тренировки`:'Пока без ошибок'}</h3></div>
+    ${wk.length?`<div class="wordlist">${wk.map(w=>`<span class="chip">${W[w].tr}</span>`).join('')}</div><button class="btn violet" id="mis">Тренировать ошибки</button>`:`<p class="note">Слова, в которых ты ошибся, появятся здесь. Правильные ответы убирают их из списка.</p>`}</div>`;
+}
+function startMistakes(){ const ids=Object.keys(S.weak).slice(0,6); if(!ids.length) return toast('Ошибок нет — отлично!'); beginQueue({n:0,title:'Мои ошибки',mode:'mistakes'}, quizFor(ids)); }
+function comeback(old){
+  modal('С возвращением!', `<div class="row">${mascot('happy',72)}<p class="muted">Серия (${old} дн.) сбросилась, но слова остались на месте. Начнём с лёгкой разминки на пару минут.</p></div><button class="btn" id="cb">Разминка</button>`, true);
+  $('#cb').onclick=()=>{ document.querySelector('.modal-bg')?.remove(); if(S.words.length) beginQueue({n:0,title:'Повторение'}, quizFor(shuffle(S.words).slice(0,4))); else startLesson(nextLesson()); };
+}
+
 function settings(){
   modal('Настройки прототипа', `
+    <div class="set-h">Цель на день</div>
+    <div class="seg" id="goal">${[1,2,3].map(g=>`<button data-g="${g}" class="${S.goal===g?'on':''}">${g} ${g===1?'занятие':'занятия'}</button>`).join('')}</div>
+    <div class="set-h">Напоминание</div>
+    <div class="seg" id="rm"><button data-r="0" class="${S.remind.on?'':'on'}">Выкл</button><button data-r="1" class="${S.remind.on?'on':''}">Вкл</button></div>
+    ${S.remind.on?`<div class="seg" id="rt">${['09:00','13:00','19:00','21:00'].map(t=>`<button data-t="${t}" class="${S.remind.t===t?'on':''}">${t}</button>`).join('')}</div>`:''}
+    <p class="note">В приложении будет мягкое напоминание в выбранное время. В прототипе уведомлений нет.</p>
+    <div class="set-h">Проверить серию (демо)</div>
+    <div class="seg"><button id="sk1">Пропустить 1 день</button><button id="sk3">Пропустить 3 дня</button></div>
+    <p class="note">Один пропуск закрывает заморозка. Если заморозок не хватает, серия сбрасывается и появляется экран возвращения.</p>
+    <div class="set-h">Данные</div>
     <button class="btn ghost" id="chlv">Сменить уровень</button>
     <button class="btn ghost" id="rs1">Сбросить прогресс</button>
     <p class="note">Прогресс — это пройденные уроки, слова, XP и «понимание речи». Выбранный уровень сохранится.</p>
     <button class="btn ghost" id="rs2">Начать с нуля и выбрать уровень заново</button>`, true);
   $('#chlv').onclick=()=>{ S.screen='onboard'; render(); };
+  document.querySelectorAll('#goal button').forEach(b=>b.onclick=()=>{ S.goal=+b.dataset.g; save(); settings(); });
+  document.querySelectorAll('#rm button').forEach(b=>b.onclick=()=>{ S.remind.on=b.dataset.r==='1'; save(); settings(); });
+  document.querySelectorAll('#rt button').forEach(b=>b.onclick=()=>{ S.remind.t=b.dataset.t; save(); settings(); });
+  const skip=n=>{ if(!S.lastDay) return toast('Сначала пройди хотя бы одно занятие.'); S.lastDay=shiftDays(S.lastDay,-(n+1)); S.today={d:'',n:0}; save(); S.screen='home'; render(); };
+  $('#sk1').onclick=()=>skip(1); $('#sk3').onclick=()=>skip(3);
   const ask=(id,full,label)=>{ $(id).onclick=()=>{ const b=$(id); if(b.dataset.armed){ resetProgress(full); toast('Готово: начинаем с нуля'); return; } b.dataset.armed=1; b.className='btn danger'; b.textContent='Точно сбросить? Нажми ещё раз'; setTimeout(()=>{ if(b.isConnected){ delete b.dataset.armed; b.className='btn ghost'; b.textContent=label; } },4000); }; };
   ask('#rs1',false,'Сбросить прогресс'); ask('#rs2',true,'Начать с нуля и выбрать уровень заново');
 }
@@ -437,7 +537,7 @@ function sChoose(st){
   if(st.mode==='listen'){ $('#sp').onclick=()=>speak(w.tr); setTimeout(()=>speak(w.tr),300); }
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     if(S.answered) return; S.answered=true;
-    const ok=b.dataset.w===st.w; b.classList.add(ok?'ok':'no');
+    const ok=b.dataset.w===st.w; b.classList.add(ok?'ok':'no'); grade(st.w,ok);
     if(!ok){ app.querySelector(`[data-w="${st.w}"]`).classList.add('ok'); wrong(st); }
     sheet(ok, ok?'':`Правильно: ${w.tr} — ${w.ru}`);
   });
@@ -451,7 +551,7 @@ function sPic(st){
   $('#sp').onclick=()=>speak('Bu '+w.tr); setTimeout(()=>speak('Bu '+w.tr),300);
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     if(S.answered) return; S.answered=true;
-    const ok=b.dataset.w===st.w; b.classList.add(ok?'ok':'no');
+    const ok=b.dataset.w===st.w; b.classList.add(ok?'ok':'no'); grade(st.w,ok);
     if(!ok){ app.querySelector(`[data-w="${st.w}"]`).classList.add('ok'); wrong(st); }
     sheet(ok, `Bu ${w.tr} — это ${w.ru}`);
   });
@@ -467,7 +567,7 @@ function sPairs(st){
   cr.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     if(!selL) return;
     if(selL.dataset.w===b.dataset.w){ selL.classList.add('ok'); b.classList.add('ok'); const a=selL; setTimeout(()=>{a.classList.add('gone'); b.classList.add('gone');},300); selL=null; if(--left===0) setTimeout(()=>advanceFoot('Дальше'),350); }
-    else { b.classList.add('no'); S.mistakes++; setTimeout(()=>b.classList.remove('no'),400); }
+    else { b.classList.add('no'); S.mistakes++; grade(selL.dataset.w,false); setTimeout(()=>b.classList.remove('no'),400); }
   });
 }
 
@@ -490,7 +590,7 @@ function sDialog(st){
     <div class="opts" style="margin-top:8px">${shuffle(st.opts).map(o=>`<button class="opt" data-w="${o}">${W[o].tr}</button>`).join('')}</div>`);
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     if(S.answered) return; S.answered=true;
-    const ok=b.dataset.w===bl.blank; b.classList.add(ok?'ok':'no');
+    const ok=b.dataset.w===bl.blank; b.classList.add(ok?'ok':'no'); grade(bl.blank,ok);
     $('#bl').textContent=W[bl.blank].tr; if(!ok){ app.querySelector(`[data-w="${bl.blank}"]`).classList.add('ok'); wrong(st); }
     speak(bl.tr.replace('___',W[bl.blank].tr));
     sheet(ok, ok?'':`Правильно: ${W[bl.blank].tr}`);
@@ -522,18 +622,20 @@ function finish(){
   const l=S.lesson, gained = l.n ? 40-Math.min(S.mistakes*3,20) : 10;
   if(l.n){ S.done[l.n]=true; (NEW_WORDS[l.n]||[]).forEach(w=>{ if(!S.words.includes(w)) S.words.push(w); }); }
   S.xp+=gained; save();
+  const bonus = markPractice(), cnt = todayCount();
   const nw = l.n?NEW_WORDS[l.n]:[];
   const acc = Math.max(40, Math.round(100 - S.mistakes/Math.max(S.total,1)*100));
   const before=(coverage()-(l.n?COVER_GAIN[l.n]:0));
   app.innerHTML = `
   <div class="burst stack pop" style="margin-top:3vh"><span class="bob">${mascot('happy',120)}</span>
-    <span class="tag">${l.n?`Урок ${l.n} пройден`:'Повторение завершено'}</span>
+    <span class="tag">${l.n?`Урок ${l.n} пройден`:(l.mode==='mistakes'?'Тренировка ошибок завершена':'Повторение завершено')}</span>
     <h1 class="hero-title">${l.n?'Отличная работа!':'Так держать!'}</h1></div>
   <div class="stats" style="margin-top:16px">
     <div class="card stat"><b>+${gained}</b><span>XP</span></div>
     <div class="card stat"><b>${acc}%</b><span>точность</span></div>
     <div class="card stat"><b>${S.words.length}</b><span>слов знаю</span></div>
   </div>
+  <div class="card" style="margin-top:12px"><div class="row" style="justify-content:space-between"><div class="row">${I.flame}<b style="font-family:var(--font-display);font-size:18px">Серия: ${S.streak} дн.</b></div><span class="muted">Цель дня: ${Math.min(cnt,S.goal)}/${S.goal}</span></div>${cnt>=S.goal?'<p class="note" style="margin-top:6px">Цель дня выполнена!</p>':''}${bonus==='freeze'?'<p class="note" style="margin-top:6px">Новая заморозка за 7 дней подряд!</p>':''}${l.mode==='mistakes'?`<p class="note" style="margin-top:6px">Осталось слов для тренировки: ${Object.keys(S.weak).length}</p>`:''}</div>
   ${l.n?`<div class="card stack" style="margin-top:12px"><span class="tag">Понимание речи</span><div class="row"><b style="font-family:var(--font-display);font-size:26px">~${coverage()}%</b><span class="muted">слов типичного диалога</span></div><div class="bar"><i id="cv" style="width:${Math.min(100,before*2.2)}%"></i></div></div>
   <div class="card stack" style="margin-top:12px"><span class="tag">Новые слова</span><div class="wordlist">${nw.map(w=>`<span class="chip">${W[w].tr}</span>`).join('')}</div><p class="note">Эти слова вернутся в следующих уроках и в автоповторении.</p></div>`:''}
   <div class="sticky"><button class="btn" id="hm">${l.n && nextLesson() && nextLesson().playable ? `Дальше · урок ${nextLesson().n}` : 'На главную'}</button></div>`;
