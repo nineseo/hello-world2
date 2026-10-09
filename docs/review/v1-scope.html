@@ -1,0 +1,128 @@
+<title>Самоучитель v1: согласование</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&family=Rubik:wght@500;600;700&display=swap">
+<style>
+:root{--bg:#f3f5fd;--surface:#fff;--ink:#17194a;--muted:#5e6499;--line:#dfe3f8;--accent:#5a3df0;--soft:#eceafe;--font-d:"Rubik","Nunito",system-ui,sans-serif;--font-b:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0f1230;--surface:#171c46;--ink:#eef0ff;--muted:#a9b0da;--line:#2a3160;--accent:#9d86ff;--soft:#23295e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1230;--surface:#171c46;--ink:#eef0ff;--muted:#a9b0da;--line:#2a3160;--accent:#9d86ff;--soft:#23295e;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;padding-inline:16px;background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:16px;line-height:1.55;font-weight:500}
+main{max-width:760px;margin:0 auto;padding-block:28px 64px}
+h1,h2{font-family:var(--font-d);text-wrap:balance;line-height:1.2}
+h1{font-size:32px;margin:0 0 12px}
+h2{font-size:22px;margin:36px 0 10px;padding-top:6px}
+p{margin:10px 0}
+a{color:var(--accent);word-break:break-all}
+hr{border:0;border-top:1.5px solid var(--line);margin:24px 0}
+ul{padding-left:22px;margin:10px 0}li{margin:5px 0}
+ul.chk{list-style:none;padding:0}
+ul.chk li{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px}
+ul.chk label{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+ul.chk input{width:20px;height:20px;margin-top:3px;accent-color:var(--accent);flex:none}
+.tw{overflow-x:auto;margin:12px 0;border:1.5px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:14.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--font-d);font-weight:600;background:var(--soft)}
+tr:last-child td{border-bottom:0}
+pre{background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:14px;overflow-x:auto;font-size:15px}
+code{background:var(--soft);padding:1px 6px;border-radius:6px}
+</style>
+<main>
+<h1>Самоучитель языков: версия v1 для согласования</h1>
+<p>Это обзор для вас и помощницы: что за приложение, как оно устроено, что уже показано в прототипе, чего ещё нет и что нужно согласовать до начала разработки.</p>
+<p>Прототип (кликабельный, откройте на телефоне): <a href="https://claude.ai/artifact/GEvngC8VZgiV6GB6v4MynH" target="_blank" rel="noopener">https://claude.ai/artifact/GEvngC8VZgiV6GB6v4MynH</a></p>
+<p>Прототип приватный. Чтобы открыть его помощнице, нужно поделиться страницей через меню «Поделиться».</p>
+<hr>
+<h2>1. Что за приложение</h2>
+<p><strong>Выучи язык с нуля, шаг за шагом, без зубрёжки.</strong> Открываешь приложение, нажимаешь «Продолжить», и оно ведёт тебя само: что учить, в каком порядке, когда повторять.</p>
+<ul>
+<li>Первый язык: турецкий. Интерфейс на русском. Потом другие языки и другие языки интерфейса.</li>
+<li>Слова и фразы из <strong>живой разговорной речи</strong>: то, что говорят в жизни, в быту, в общении.</li>
+<li>Каждый урок учит новому и повторяет старое. Примеры связаны между собой: «мой дом» → «мой дом красный».</li>
+<li>Грамматика объясняется внутри уроков, коротко и понятно, подробности по кнопке.</li>
+<li>Позиционирование: «выучи язык» (для чего именно, не важно). Про сериалы в рекламе и интерфейсе не говорим.</li>
+</ul>
+<h2>2. Для кого</h2>
+<p>Взрослые. Три группы: новичок (с нуля), знаю что-то, понимаю но не всё. Для v1 делаем путь новичка; другие группы выбирают уровень при входе и пропускают то, что знают.</p>
+<h2>3. Как устроен курс</h2>
+<pre>Курс → Главы → Уроки</pre>
+<ul>
+<li><strong>Глава</strong> — тема из 8 уроков, заканчивается финалом (мини-сценой). Пример: «Первый контакт».</li>
+<li><strong>Урок</strong> — 8–12 минут: разминка (повтор прошлого) → новые слова (2–5) → грамматическое открытие → задания → мини-диалог/сцена → итог.</li>
+<li>Примерно: v1-проверка метода 8–10 глав; первая публичная версия около 20–25 глав; полный путь для новичка около 40–60 глав. Оценка, уточнится на данных.</li>
+</ul>
+<h2>4. Экраны и их статус</h2>
+<div class="tw"><table><thead><tr><th>Экран</th><th>Что на нём</th><th>Статус</th></tr></thead><tbody><tr><td>Выбор уровня</td><td>Три карточки: «С нуля», «Что-то знаю», «Понимаю, но не всё»; необязательная кнопка теста</td><td>Есть (тест — макет)</td></tr><tr><td>Учиться</td><td>Карточка «Продолжить», цель дня, дни подряд, XP, слова, понимание речи, список глав и уроков</td><td>Есть</td></tr><tr><td>Урок</td><td>Слово, выбор ответа, картинки, пары, сборка фразы, диалог, грамматическое открытие, сцена</td><td>Есть (уроки 1–2)</td></tr><tr><td>Итог урока</td><td>XP, точность, слова, дни подряд, понимание речи</td><td>Есть</td></tr><tr><td>Практика</td><td>Повторение, «Мои ошибки»; скоро: говорение, тренажёры слов, ИИ-диалог</td><td>Есть частично</td></tr><tr><td>Слова</td><td>Мои слова; скоро: ТОП-слова, идиомы</td><td>Есть частично</td></tr><tr><td>Грамматика</td><td>Правила из пройденных уроков, открываются по мере обучения</td><td>Есть частично</td></tr><tr><td>Профиль</td><td>Статистика, цель дня, напоминание, смена уровня, сброс, подписка</td><td>Есть (подписка — макет)</td></tr><tr><td>Вход / регистрация</td><td>—</td><td>Нет</td></tr><tr><td>Лендинг для гостей</td><td>—</td><td>Нет</td></tr><tr><td>Подписка и оплата</td><td>—</td><td>Нет</td></tr><tr><td>Тёмная и светлая тема</td><td>Следует системной</td><td>Есть</td></tr></tbody></table></div>
+<h2>5. Типы заданий</h2>
+<p>Есть: слово → перевод, на слух, картинки, пары, собрать фразу, закончить диалог, «Заметил?» (грамматика), сцена.</p>
+<p>Нужно добавить: диктант, заполнить пропуск, найти ошибку, говорение (произнеси), собрать слово из частей (окончания).</p>
+<h2>6. Привычка и прогресс</h2>
+<ul>
+<li><strong>Цель на день:</strong> 1–3 занятия (урок или повторение), выбирается в профиле.</li>
+<li><strong>Дни подряд:</strong> сколько дней подряд занимаешься. Пропустил день — счётчик начинается заново, уроки и слова остаются.</li>
+<li><strong>XP:</strong> очки опыта за занятия. История и статистика будут позже.</li>
+<li><strong>Слов знаю</strong> и <strong>понимание речи</strong> (будет считаться по частотным данным).</li>
+<li><strong>Мои ошибки:</strong> слова, в которых ошибся; правильные ответы убирают их.</li>
+<li><strong>Напоминание:</strong> в приложении, мягкое, в выбранное время.</li>
+</ul>
+<h2>7. Чего ещё нет (до v1)</h2>
+<p><strong>Продукт</strong></p>
+<ul>
+<li>Вход и регистрация, профиль пользователя, хранение прогресса на сервере.</li>
+<li>Лендинг и публичные страницы (слова, грамматика) для гостей.</li>
+<li>Подписка, бесплатный доступ, оплата, пробный период.</li>
+<li>Настоящие напоминания (уведомления).</li>
+<li>Говорение с распознаванием речи.</li>
+<li>Тап по слову в сценах, личный словарь.</li>
+<li>Полный словарь: ТОП-слова, идиомы и сленг.</li>
+<li>Грамматический справочник целиком.</li>
+<li>Тренажёры слов: карточки, узнавание, письмо, картинки.</li>
+<li>Диалог с ИИ (только на изученных словах).</li>
+<li>Офлайн, поиск, история прогресса и статистика.</li>
+<li>Юридические страницы: политика, условия.</li>
+</ul>
+<p><strong>Контент</strong></p>
+<ul>
+<li>План глав (названия, слова, грамматика по главам) и уроки глав 2–10+.</li>
+<li>Список слов из частотных данных (после доступа к данным).</li>
+<li>Живые реплики и сцены, озвучка, анимация.</li>
+<li>Проверка турецкого носителем до публичного запуска.</li>
+</ul>
+<p><strong>Дизайн</strong></p>
+<ul>
+<li>Название, логотип, домен, персонаж.</li>
+<li>Иллюстрации и анимация сцен.</li>
+<li>Версия для планшета и десктопа.</li>
+</ul>
+<p><strong>Техника</strong></p>
+<ul>
+<li>Бэкенд и база данных, алгоритм повторения (FSRS), оплата, хостинг.</li>
+<li>Мультиязычность интерфейса.</li>
+</ul>
+<h2>8. Решения, которые уже приняты</h2>
+<ul>
+<li>Приложение отдельное, не внутри dizisub. Данные оттуда берём (слова, идиомы, грамматика, тренажёры).</li>
+<li>Видео и фрагменты из сериалов не используем. Делаем свои реплики и свою анимацию.</li>
+<li>Уровень выбирает сам пользователь; тест — необязательный.</li>
+<li>«Глава» вместо «Станция». Слово «серия» не используем.</li>
+<li>Без «заморозок серии» и лиг. XP оставляем.</li>
+<li>Монетизацию решим позже; проверим подписку без рекламы с пробным периодом и бесплатной частью.</li>
+</ul>
+<h2>9. Слова для проверки (уроки 1–2)</h2>
+<p>Просим помощницу проверить, звучат ли слова и русская транскрипция так, как нужно.</p>
+<div class="tw"><table><thead><tr><th>Турецкий</th><th>Транскрипция</th><th>Перевод</th></tr></thead><tbody><tr><td>merhaba</td><td>мерхаба</td><td>привет</td></tr><tr><td>evet</td><td>эвет</td><td>да</td></tr><tr><td>hayır</td><td>хайыр</td><td>нет</td></tr><tr><td>tamam</td><td>тамам</td><td>хорошо, ладно</td></tr><tr><td>teşekkürler</td><td>тешеккюрлер</td><td>спасибо</td></tr><tr><td>bu</td><td>бу</td><td>это</td></tr><tr><td>ne</td><td>нэ</td><td>что</td></tr><tr><td>ev</td><td>эв</td><td>дом</td></tr><tr><td>araba</td><td>араба</td><td>машина</td></tr></tbody></table></div>
+<p>Фразы: <em>Bu ev.</em> («Это дом.»), <em>Bu araba.</em> («Это машина.»), <em>Bu ne?</em> («Что это?»), <em>Tamam, teşekkürler.</em></p>
+<h2>10. Вопросы для согласования</h2>
+<p>Отметьте, что одобряете, и напишите, что поменять.</p>
+<ul class="chk">
+<li><label><input type="checkbox"> <span>Идея и позиционирование: «выучи язык, разговорная речь».</span></label></li>
+<li><label><input type="checkbox"> <span>Структура: курс → главы → уроки.</span></label></li>
+<li><label><input type="checkbox"> <span>Название «Глава» для раздела из 8 уроков.</span></label></li>
+<li><label><input type="checkbox"> <span>Первый урок «Привет!»: пять самых нужных слов.</span></label></li>
+<li><label><input type="checkbox"> <span>Экраны и нижнее меню из 5 разделов.</span></label></li>
+<li><label><input type="checkbox"> <span>Цель дня, дни подряд, XP: понятно ли, зачем это?</span></label></li>
+<li><label><input type="checkbox"> <span>Тексты на экранах: всё ли понятно без объяснений?</span></label></li>
+<li><label><input type="checkbox"> <span>Дизайн: цвета, карточки, нижнее меню.</span></label></li>
+<li><label><input type="checkbox"> <span>Список недостающего (раздел 7): чего-то не хватает?</span></label></li>
+<li><label><input type="checkbox"> <span>Что непонятно или не нравится?</span></label></li>
+</ul>
+</main>

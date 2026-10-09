@@ -24,6 +24,7 @@
   --good-soft: rgba(46, 230, 184, .18);
   --sheet: #1a1e4a;
   --accent-ink: #2ee6b8;
+  --nav-bg: rgba(24, 28, 70, .88);
   --font-display: "Rubik", "Nunito", system-ui, sans-serif;
   --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: dark;
@@ -33,14 +34,14 @@
     --bg: #eef0ff; --glow1: rgba(124, 92, 255, .20); --glow2: rgba(46, 230, 184, .22);
     --surface: #ffffff; --surface-strong: #f4f5ff; --line: #dfe3f8; --ink: #17194a; --muted: #5e6499;
     --cta: #19d3a5; --cta-ink: #04281f; --cta-edge: #0ea07c; --violet: #6a49f5; --violet-edge: #4a2fcf;
-    --sun: #ffb800; --bad: #e5384d; --bad-soft: #ffe3e7; --good-soft: #d6f7ee; --sheet: #ffffff; --accent-ink: #5a3df0; color-scheme: light;
+    --sun: #ffb800; --bad: #e5384d; --bad-soft: #ffe3e7; --good-soft: #d6f7ee; --sheet: #ffffff; --accent-ink: #5a3df0; --nav-bg: rgba(255, 255, 255, .92); color-scheme: light;
   }
 }
 :root[data-theme="light"] {
   --bg: #eef0ff; --glow1: rgba(124, 92, 255, .20); --glow2: rgba(46, 230, 184, .22);
   --surface: #ffffff; --surface-strong: #f4f5ff; --line: #dfe3f8; --ink: #17194a; --muted: #5e6499;
   --cta: #19d3a5; --cta-ink: #04281f; --cta-edge: #0ea07c; --violet: #6a49f5; --violet-edge: #4a2fcf;
-  --sun: #ffb800; --bad: #e5384d; --bad-soft: #ffe3e7; --good-soft: #d6f7ee; --sheet: #ffffff; --accent-ink: #5a3df0; color-scheme: light;
+  --sun: #ffb800; --bad: #e5384d; --bad-soft: #ffe3e7; --good-soft: #d6f7ee; --sheet: #ffffff; --accent-ink: #5a3df0; --nav-bg: rgba(255, 255, 255, .92); color-scheme: light;
 }
 * { box-sizing: border-box; }
 html, body { min-height: 100%; }
@@ -66,7 +67,7 @@ p { margin: 0; }
 .btn.violet { background: var(--violet); color: #fff; box-shadow: 0 5px 0 var(--violet-edge); }
 .btn.ghost { background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); box-shadow: none; }
 .btn.danger { background: var(--bad); color: #fff; box-shadow: 0 5px 0 rgba(0,0,0,.25); }
-.btn[disabled] { opacity: .4; pointer-events: none; }
+.btn[disabled] { background: var(--surface-strong); color: var(--muted); box-shadow: none; pointer-events: none; }
 .chip { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1.5px solid var(--line); padding: 6px 12px; border-radius: 999px; font-weight: 800; font-size: 14px; }
 .chip svg { width: 16px; height: 16px; }
 .card { background: var(--surface); border: 1.5px solid var(--line); border-radius: 28px; padding: 18px; backdrop-filter: blur(8px); }
@@ -192,14 +193,15 @@ summary { cursor: pointer; font-weight: 800; color: var(--muted); }
 .modal { background: var(--sheet); border: 1.5px solid var(--line); border-radius: 30px; padding: 22px; max-width: 460px; width: 100%; animation: rise .25s ease-out; }
 .modal h3 { font-size: 20px; }
 .modal { max-height: 88vh; overflow-y: auto; }
-.today { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
-.today h3 { font-size: 20px; margin-top: 2px; }
-.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 10px 0 8px; }
+.goal { padding: 18px; }
+.goal h3 { font-size: 19px; }
+.goal-row { display: flex; align-items: center; gap: 16px; }
+.week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 16px; padding-top: 16px; border-top: 1.5px solid var(--line); }
 .day { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); font-weight: 800; }
-.day i { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-strong); display: grid; place-items: center; border: 2px solid var(--line); }
+.day i { width: 36px; height: 36px; border-radius: 50%; background: var(--surface-strong); display: grid; place-items: center; border: 2px solid var(--line); }
 .day i svg { width: 18px; height: 18px; }
-.day.on i { background: var(--cta); border-color: var(--cta); color: var(--cta-ink); }
-.day.today i { border-color: var(--violet); }
+.day.on i { background: linear-gradient(135deg, var(--cta), #7be8ff); border-color: transparent; color: var(--cta-ink); }
+.day.today i { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(124,92,255,.25); }
 .day.today { color: var(--ink); }
 .mist { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
 .mist .btn { width: auto; align-self: flex-start; padding: 12px 20px; }
@@ -207,14 +209,14 @@ summary { cursor: pointer; font-weight: 800; color: var(--muted); }
 .seg button { flex: 1; padding: 11px 6px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--surface); font-weight: 800; color: var(--ink); }
 .seg button.on { background: var(--cta); color: var(--cta-ink); border-color: var(--cta); }
 .set-h { font-family: var(--font-display); font-weight: 600; font-size: 15px; margin-top: 4px; }
-#app.withnav { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
-.nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--sheet); border-top: 1.5px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 4; }
-.nav-in { max-width: 460px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 8px 8px; }
-.tab { background: none; border: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 0; font-size: 11px; font-weight: 800; color: var(--muted); min-width: 0; }
-.tab .ti { width: 52px; height: 30px; border-radius: 15px; display: grid; place-items: center; transition: background .15s; }
-.tab .ti svg { width: 24px; height: 24px; }
-.tab.on { color: var(--accent-ink); }
-.tab.on .ti { background: var(--surface-strong); }
+#app.withnav { padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)); }
+.nav { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: calc(100% - 24px); max-width: 436px; background: var(--nav-bg); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border: 1.5px solid var(--line); border-radius: 34px; box-shadow: 0 14px 34px rgba(5, 6, 30, .35); padding: 8px; z-index: 4; }
+.nav-in { display: flex; gap: 4px; }
+.tab { flex: 1 1 0; min-width: 0; height: 48px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 26px; background: none; color: var(--muted); font-weight: 800; font-size: 14px; transition: flex-grow .25s ease, background .2s, color .2s; }
+.tab svg { width: 24px; height: 24px; flex: none; }
+.tab .lb { display: none; white-space: nowrap; font-family: var(--font-display); font-weight: 600; font-size: 14px; }
+.tab.on { flex-grow: 2.7; background: var(--violet); color: #fff; box-shadow: 0 4px 0 var(--violet-edge); }
+.tab.on .lb { display: inline; }
 .chap { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 24px; padding: 14px 16px; margin-bottom: 10px; }
 .chap .no { width: 46px; height: 46px; border-radius: 15px; background: var(--surface-strong); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 18px; flex: none; }
 .chap .no svg { width: 22px; height: 22px; }
@@ -231,7 +233,7 @@ summary { cursor: pointer; font-weight: 800; color: var(--muted); }
 .pill-tabs { display: flex; gap: 8px; margin: 4px 0 12px; }
 .pill-tabs button { padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); font-weight: 800; color: var(--ink); }
 .pill-tabs button.on { background: var(--cta); color: var(--cta-ink); border-color: var(--cta); }
-.pstats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pstats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .avatar { display: flex; align-items: center; gap: 14px; }
 .btn.small { padding: 12px 14px; font-size: 15px; }
 
@@ -286,7 +288,7 @@ function mascot(mood='happy', size=64){
 const SCENE_SVG = '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><circle cx="262" cy="40" r="22" fill="#ffe27a" opacity=".85"/><rect y="150" width="320" height="50" fill="#14134a" opacity=".35"/><circle cx="92" cy="84" r="28" fill="#ffd9b8"/><path d="M62 70c4-28 54-28 62 0-15-9-46-9-62 0z" fill="#3b2a24"/><rect x="62" y="112" width="60" height="72" rx="24" fill="#ff5d6c"/><circle cx="82" cy="86" r="2.8" fill="#14134a"/><circle cx="100" cy="86" r="2.8" fill="#14134a"/><path d="M85 99q7 6 14 0" stroke="#14134a" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="236" cy="88" r="28" fill="#f3c9a0"/><path d="M206 82c2-32 60-32 60 4-19-15-40-15-60-4z" fill="#14134a"/><rect x="206" y="116" width="60" height="68" rx="24" fill="#ffc93c"/><circle cx="226" cy="91" r="2.8" fill="#14134a"/><circle cx="244" cy="91" r="2.8" fill="#14134a"/><path d="M229 103q7 6 14 0" stroke="#14134a" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>';
 
 const LESSONS = [
-  {n:1,title:'Ты уже знаешь турецкий',sub:'5 слов из сериалов',playable:true},
+  {n:1,title:'Привет!',sub:'Первые слова для любого разговора',playable:true},
   {n:2,title:'Что это?',sub:'bu, ne, ev, araba',playable:true},
   {n:3,title:'Какой он?',sub:'Ev büyük — без слова «есть»',goal:'Прилагательные büyük, küçük, hızlı, kırmızı. Открытие: в турецком «дом большой» говорят без слова «есть» — Ev büyük.'},
   {n:4,title:'Один — много',sub:'-ler / -lar',goal:'Множественное число: ev → evler, araba → arabalar. Первое открытие про гармонию гласных.'},
@@ -327,12 +329,12 @@ const NEW_WORDS = {1:['merhaba','evet','hayir','tamam','tesekkur'],2:['bu','ne',
 const COVER_GAIN = {1:4,2:7};
 
 /* ---------- состояние ---------- */
-const S = {screen:'onboard',tab:'learn',wtab:'mine',level:null,done:{},words:[],streak:0,lastDay:null,days:[],goal:1,today:{d:'',n:0},weak:{},remind:{on:false,t:'19:00'},lesson:null,queue:[],i:0,total:0,mistakes:0,answered:false,seen:0};
+const S = {screen:'onboard',tab:'learn',wtab:'mine',level:null,done:{},words:[],xp:0,streak:0,lastDay:null,days:[],goal:1,today:{d:'',n:0},weak:{},remind:{on:false,t:'19:00'},lesson:null,queue:[],i:0,total:0,mistakes:0,answered:false,seen:0};
 const KEY = 'proto-v4';
-try { const raw = localStorage.getItem(KEY); if (raw) { const o = JSON.parse(raw); Object.assign(S,{level:o.level,done:o.done||{},words:o.words||[],streak:o.streak||0,lastDay:o.lastDay||null,days:o.days||[],goal:o.goal||1,today:o.today||{d:'',n:0},weak:o.weak||{},remind:o.remind||{on:false,t:'19:00'}}); if (o.level) S.screen='home'; } } catch(e){}
-function save(){ try { localStorage.setItem(KEY, JSON.stringify({level:S.level,done:S.done,words:S.words,streak:S.streak,lastDay:S.lastDay,days:S.days,goal:S.goal,today:S.today,weak:S.weak,remind:S.remind})); } catch(e){} }
+try { const raw = localStorage.getItem(KEY); if (raw) { const o = JSON.parse(raw); Object.assign(S,{level:o.level,done:o.done||{},words:o.words||[],xp:o.xp||0,streak:o.streak||0,lastDay:o.lastDay||null,days:o.days||[],goal:o.goal||1,today:o.today||{d:'',n:0},weak:o.weak||{},remind:o.remind||{on:false,t:'19:00'}}); if (o.level) S.screen='home'; } } catch(e){}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify({level:S.level,done:S.done,words:S.words,xp:S.xp,streak:S.streak,lastDay:S.lastDay,days:S.days,goal:S.goal,today:S.today,weak:S.weak,remind:S.remind})); } catch(e){} }
 function resetProgress(full){
-  S.done={}; S.words=[]; S.streak=0; S.lastDay=null; S.days=[]; S.today={d:'',n:0}; S.weak={}; if(full){ S.level=null; S.screen='onboard'; S.tab='learn'; } else S.screen='home';
+  S.done={}; S.words=[]; S.xp=0; S.streak=0; S.lastDay=null; S.days=[]; S.today={d:'',n:0}; S.weak={}; if(full){ S.level=null; S.screen='onboard'; S.tab='learn'; } else S.screen='home';
   try { localStorage.removeItem(KEY); } catch(e){} save(); render();
 }
 const $ = (s,r=document)=>r.querySelector(s);
@@ -408,7 +410,7 @@ function onboard(){
     <p class="muted">С чего начнём? Это можно поменять в любой момент.</p>
     <button class="level" data-l="zero"><span class="ic" style="background:linear-gradient(135deg,#2ee6b8,#17a883)">${I.sprout}</span><div><b>С нуля</b><span class="muted">Ничего не знаю, начну с первых слов</span></div></button>
     <button class="level" data-l="some"><span class="ic" style="background:linear-gradient(135deg,#7c5cff,#5236d6)">${I.chat}</span><div><b>Что-то знаю</b><span class="muted">Знаю слова и фразы, хочу навести порядок</span></div></button>
-    <button class="level" data-l="most"><span class="ic" style="background:linear-gradient(135deg,#ff8a5c,#ff5d6c)">${I.tv}</span><div><b>Понимаю, но не всё</b><span class="muted">Смотрю сериалы, хочу понимать больше</span></div></button>
+    <button class="level" data-l="most"><span class="ic" style="background:linear-gradient(135deg,#ff8a5c,#ff5d6c)">${I.tv}</span><div><b>Понимаю, но не всё</b><span class="muted">Многое понимаю, хочу говорить свободнее</span></div></button>
     <button class="link" id="help">Не знаю свой уровень — помогите определить</button>
   </div>`;
   app.querySelectorAll('.level').forEach(b=>b.onclick=()=>{ S.level=b.dataset.l; save(); S.screen='home'; render(); if(S.level!=='zero') toast('В прототипе доступен путь для новичка. Остальные группы — позже.'); });
@@ -423,7 +425,7 @@ const CHAPTERS = [
   {n:5,title:'Хочу, могу, надо',goal:'Просить, предлагать, договариваться.'},
   {n:6,title:'Люди вокруг',goal:'Говорить о семье, друзьях и чувствах.'},
   {n:7,title:'Было и будет',goal:'Рассказать о вчера и завтра.'},
-  {n:8,title:'Первая сцена',goal:'Понять короткую сцену из сериала.'}
+  {n:8,title:'Первая сцена',goal:'Понять короткую живую сцену из жизни.'}
 ];
 const GRAMMAR = [
   {unlock:2,title:'Назвать предмет',ex:'Bu ev. — Это дом.',body:'Назвать предмет можно двумя словами: <b>bu</b> («это») + название. Слова «есть» между ними нет: <b>Bu ev</b>, <b>Bu araba</b>.'},
@@ -437,7 +439,7 @@ const TABS = [{id:'learn',label:'Учиться'},{id:'practice',label:'Прак
 function tabs(){
   const sres = S.tab==='learn' ? checkStreak() : null;
   ({learn:learnTab,practice:practiceTab,words:wordsTab,grammar:grammarTab,profile:profileTab})[S.tab]();
-  app.insertAdjacentHTML('beforeend', `<nav class="nav" aria-label="Разделы"><div class="nav-in">${TABS.map(t=>`<button class="tab ${S.tab===t.id?'on':''}" data-tab="${t.id}" aria-label="${t.label}"><span class="ti">${I[t.id]}</span><span>${t.label}</span></button>`).join('')}</div></nav>`);
+  app.insertAdjacentHTML('beforeend', `<nav class="nav" aria-label="Разделы"><div class="nav-in">${TABS.map(t=>`<button class="tab ${S.tab===t.id?'on':''}" data-tab="${t.id}" aria-label="${t.label}">${I[t.id]}<span class="lb">${t.label}</span></button>`).join('')}</div></nav>`);
   app.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{ if(S.tab!==b.dataset.tab){ S.tab=b.dataset.tab; render(); } });
   if(sres) setTimeout(()=>comeback(sres.old),350);
 }
@@ -448,6 +450,7 @@ function learnTab(){
   app.innerHTML = `
   <div class="top">
     <span class="chip" title="Сколько дней подряд ты занимаешься">${I.flame} ${S.streak} ${S.streak===1?'день':'дн.'} подряд</span>
+    <span class="chip" title="Очки опыта за занятия">${I.star} ${S.xp} XP</span>
   </div>
   <div class="hero pop">
     <svg class="ring" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="9"/><circle cx="42" cy="42" r="34" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-family="Rubik" font-weight="700" font-size="20" fill="#fff">${dn}/8</text></svg>
@@ -459,9 +462,8 @@ function learnTab(){
   ${todayCard()}
   <div class="meters">
     <div class="card meter"><span class="tag">Слов знаю</span><div class="big">${words}</div><div class="bar sun"><i style="width:${Math.min(100,words/25*100)}%"></i></div><span class="note">цель главы: 25</span></div>
-    <div class="card meter"><span class="tag">Понимаю речи</span><div class="big">~${cov}%</div><div class="bar"><i style="width:${Math.min(100,cov*2.2)}%"></i></div><span class="note">условно, для макета</span></div>
+    <div class="card meter"><span class="tag">Понимаю речи</span><div class="big">~${cov}%</div><div class="bar"><i style="width:${Math.min(100,cov*2.2)}%"></i></div><span class="note">слов живой речи</span></div>
   </div>
-  <div class="section-h"><h2>Главы</h2><span class="note">глава за главой</span></div>
   <div class="chap-open"><span class="tag">Глава 1 · ${dn} из 8 уроков</span><h2>Первый контакт</h2></div>
   <div class="path">
     ${LESSONS.map(l=>{
@@ -503,7 +505,7 @@ function practiceTab(){
 function wordsTab(){
   const t=S.wtab;
   const list = S.words.length ? S.words.map(w=>`<div class="rowitem"><div><b>${W[w].tr}</b><span class="muted">[${W[w].tx}] · ${W[w].ru}</span></div><button class="speak" data-w="${w}" aria-label="Послушать" style="width:44px;height:44px">${I.play}</button></div>`).join('') : `<p class="muted">Здесь появятся слова, которые ты выучишь в уроках.</p>`;
-  const soon = t==='top' ? ['ТОП-слова','Самые частые слова турецких сериалов: от самых нужных к редким.'] : ['Идиомы и сленг','Живые выражения, которые говорят герои сериалов.'];
+  const soon = t==='top' ? ['ТОП-слова','Самые частые слова живой турецкой речи: от самых нужных к редким.'] : ['Идиомы и сленг','Живые выражения, которые говорят герои сериалов.'];
   app.innerHTML = `
   <div class="top"><h1 style="font-size:26px">Слова</h1></div>
   <div class="pill-tabs"><button data-t="mine" class="${t==='mine'?'on':''}">Мои слова</button><button data-t="top" class="${t==='top'?'on':''}">ТОП-слова</button><button data-t="idioms" class="${t==='idioms'?'on':''}">Идиомы</button></div>
@@ -527,9 +529,11 @@ function profileTab(){
   <div class="card avatar" style="margin-bottom:12px">${mascot('happy',64)}<div><b style="font-family:var(--font-display);font-size:18px">Твой путь</b><div class="muted">Уровень: ${lv}</div></div></div>
   <div class="pstats" style="margin-bottom:12px">
     <div class="card stat"><b>${S.streak}</b><span>дней подряд</span></div>
+    <div class="card stat"><b>${S.xp}</b><span>XP</span></div>
     <div class="card stat"><b>${S.words.length}</b><span>слов</span></div>
     <div class="card stat"><b>${Object.keys(S.done).length}</b><span>уроков</span></div>
   </div>
+  <p class="note" style="margin:-4px 2px 12px">XP — очки опыта за занятия. Если пропустить день, «дни подряд» начнутся заново, а уроки, слова и XP останутся.</p>
   <div class="card stack">
     <div class="set-h">Цель на день</div>
     <div class="seg" id="goal">${[1,2,3].map(g=>`<button data-g="${g}" class="${S.goal===g?'on':''}">${g} ${g===1?'занятие':'занятия'}</button>`).join('')}</div>
@@ -559,14 +563,14 @@ function profileTab(){
 
 function todayCard(){
   const t=todayStr(), cnt=todayCount(), done=cnt>=S.goal;
-  const days=[6,5,4,3,2,1,0].map(k=>{ const d=shiftDays(t,-k); const wd=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][new Date(d+'T12:00:00').getDay()]; return `<div class="day ${S.days.includes(d)?'on':''} ${k===0?'today':''}"><i>${S.days.includes(d)?I.check:''}</i>${wd}</div>`; }).join('');
-  return `<div class="card today">
-    <span class="tag">Сегодня</span>
-    <h3>${done?'Цель на сегодня выполнена!':`Занятий сегодня: ${cnt} из ${S.goal}`}</h3>
-    <div class="bar" style="margin-top:8px"><i style="width:${Math.min(100,cnt/S.goal*100)}%"></i></div>
-    <span class="note">${done?'Отличный день. Возвращайся завтра.':'Пройди урок или повторение, и день засчитается.'}</span>
+  const R=26, C=2*Math.PI*R, off=C*(1-Math.min(1,cnt/S.goal));
+  const days=[6,5,4,3,2,1,0].map(k=>{ const d=shiftDays(t,-k); const wd=['Вс','Пн','Вт','Ср','Чт','Пт','Сб'][new Date(d+'T12:00:00').getDay()]; const on=S.days.includes(d); return `<div class="day ${on?'on':''} ${k===0?'today':''}"><i>${on?I.check:''}</i>${wd}</div>`; }).join('');
+  return `<div class="card goal">
+    <div class="goal-row">
+      <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><circle cx="32" cy="32" r="${R}" fill="none" stroke="var(--surface-strong)" stroke-width="8"/><circle cx="32" cy="32" r="${R}" fill="none" stroke="${done?'var(--cta)':'var(--violet)'}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 32 32)"/><text x="32" y="38" text-anchor="middle" font-family="Rubik" font-weight="700" font-size="17" fill="var(--ink)">${cnt}/${S.goal}</text></svg>
+      <div><h3>Цель на день</h3><p class="muted">${done?'Выполнена. Возвращайся завтра!':'Пройди урок или повторение'}</p></div>
+    </div>
     <div class="week">${days}</div>
-    <span class="note">${S.streak>0?`Дней подряд: ${S.streak}. Пропустишь день — счётчик начнётся заново, но уроки и слова останутся.`:'Занимайся каждый день: так слова запоминаются лучше.'}</span>
   </div>`;
 }
 function mistakesCard(){
@@ -712,15 +716,15 @@ function sScene(st){
   shell(`<span class="lbl">Сцена</span>
     <div class="scene">${SCENE_SVG}<div class="cap">${st.tr}<small>${st.ru}</small></div></div>
     <button class="btn ghost" id="pl">Послушать реплику</button>
-    <p class="note">Макет. В продукте здесь будет настоящая реплика из сериала, озвученная заново (TTS) и показанная в стилизованной анимации.</p>`, `<div class="foot"><button class="btn" id="nx">Закончить урок</button></div>`);
+    <p class="note">Макет. В продукте здесь будет короткая анимированная сцена с живой репликой.</p>`, `<div class="foot"><button class="btn" id="nx">Закончить урок</button></div>`);
   $('#pl').onclick=()=>speak(st.tr.replace(' — ',' '));
   $('#nx').onclick=next;
 }
 
 function finish(){
-  const l=S.lesson;
+  const l=S.lesson, gained = l.n ? 40-Math.min(S.mistakes*3,20) : 10;
   if(l.n){ S.done[l.n]=true; (NEW_WORDS[l.n]||[]).forEach(w=>{ if(!S.words.includes(w)) S.words.push(w); }); }
-  markPractice(); save();
+  S.xp+=gained; markPractice(); save();
   const cnt = todayCount();
   const nw = l.n?NEW_WORDS[l.n]:[];
   const acc = Math.max(40, Math.round(100 - S.mistakes/Math.max(S.total,1)*100));
@@ -730,7 +734,7 @@ function finish(){
     <span class="tag">${l.n?`Урок ${l.n} пройден`:(l.mode==='mistakes'?'Тренировка ошибок завершена':'Повторение завершено')}</span>
     <h1 class="hero-title">${l.n?'Отличная работа!':'Так держать!'}</h1></div>
   <div class="stats" style="margin-top:16px">
-    <div class="card stat"><b>${l.n?NEW_WORDS[l.n].length:S.total}</b><span>${l.n?'новых слов':'заданий'}</span></div>
+    <div class="card stat"><b>+${gained}</b><span>XP</span></div>
     <div class="card stat"><b>${acc}%</b><span>точность</span></div>
     <div class="card stat"><b>${S.words.length}</b><span>слов знаю</span></div>
   </div>
