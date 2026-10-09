@@ -23,6 +23,7 @@
   --bad-soft: rgba(255, 107, 122, .18);
   --good-soft: rgba(46, 230, 184, .18);
   --sheet: #1a1e4a;
+  --accent-ink: #2ee6b8;
   --font-display: "Rubik", "Nunito", system-ui, sans-serif;
   --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: dark;
@@ -32,14 +33,14 @@
     --bg: #eef0ff; --glow1: rgba(124, 92, 255, .20); --glow2: rgba(46, 230, 184, .22);
     --surface: #ffffff; --surface-strong: #f4f5ff; --line: #dfe3f8; --ink: #17194a; --muted: #5e6499;
     --cta: #19d3a5; --cta-ink: #04281f; --cta-edge: #0ea07c; --violet: #6a49f5; --violet-edge: #4a2fcf;
-    --sun: #ffb800; --bad: #e5384d; --bad-soft: #ffe3e7; --good-soft: #d6f7ee; --sheet: #ffffff; color-scheme: light;
+    --sun: #ffb800; --bad: #e5384d; --bad-soft: #ffe3e7; --good-soft: #d6f7ee; --sheet: #ffffff; --accent-ink: #5a3df0; color-scheme: light;
   }
 }
 :root[data-theme="light"] {
   --bg: #eef0ff; --glow1: rgba(124, 92, 255, .20); --glow2: rgba(46, 230, 184, .22);
   --surface: #ffffff; --surface-strong: #f4f5ff; --line: #dfe3f8; --ink: #17194a; --muted: #5e6499;
   --cta: #19d3a5; --cta-ink: #04281f; --cta-edge: #0ea07c; --violet: #6a49f5; --violet-edge: #4a2fcf;
-  --sun: #ffb800; --bad: #e5384d; --bad-soft: #ffe3e7; --good-soft: #d6f7ee; --sheet: #ffffff; color-scheme: light;
+  --sun: #ffb800; --bad: #e5384d; --bad-soft: #ffe3e7; --good-soft: #d6f7ee; --sheet: #ffffff; --accent-ink: #5a3df0; color-scheme: light;
 }
 * { box-sizing: border-box; }
 html, body { min-height: 100%; }
@@ -206,6 +207,32 @@ summary { cursor: pointer; font-weight: 800; color: var(--muted); }
 .seg button { flex: 1; padding: 11px 6px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--surface); font-weight: 800; color: var(--ink); }
 .seg button.on { background: var(--cta); color: var(--cta-ink); border-color: var(--cta); }
 .set-h { font-family: var(--font-display); font-weight: 600; font-size: 15px; margin-top: 4px; }
+#app.withnav { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+.nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--sheet); border-top: 1.5px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 4; }
+.nav-in { max-width: 460px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 8px 8px; }
+.tab { background: none; border: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 0; font-size: 11px; font-weight: 800; color: var(--muted); min-width: 0; }
+.tab .ti { width: 52px; height: 30px; border-radius: 15px; display: grid; place-items: center; transition: background .15s; }
+.tab .ti svg { width: 24px; height: 24px; }
+.tab.on { color: var(--accent-ink); }
+.tab.on .ti { background: var(--surface-strong); }
+.chap { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 24px; padding: 14px 16px; margin-bottom: 10px; }
+.chap .no { width: 46px; height: 46px; border-radius: 15px; background: var(--surface-strong); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 18px; flex: none; }
+.chap .no svg { width: 22px; height: 22px; }
+.chap b { display: block; font-family: var(--font-display); font-weight: 600; font-size: 17px; }
+.chap span.d { color: var(--muted); font-size: 14px; line-height: 1.3; display: block; }
+.chap.locked { opacity: .8; }
+.chap-open { margin: 14px 0 6px; }
+.chap-open h2 { font-size: 22px; }
+.rowitem { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1.5px solid var(--line); }
+.rowitem:last-child { border-bottom: 0; }
+.rowitem b { font-family: var(--font-display); font-weight: 600; font-size: 18px; display: block; }
+.rowitem .muted { font-size: 14px; }
+.soon { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border: 1.5px solid var(--line); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+.pill-tabs { display: flex; gap: 8px; margin: 4px 0 12px; }
+.pill-tabs button { padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); font-weight: 800; color: var(--ink); }
+.pill-tabs button.on { background: var(--cta); color: var(--cta-ink); border-color: var(--cta); }
+.pstats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.avatar { display: flex; align-items: center; gap: 14px; }
 .btn.small { padding: 12px 14px; font-size: 15px; }
 
 @keyframes pop { from { transform: scale(.94); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -239,6 +266,12 @@ const I = {
   sprout:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 42V24" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M24 26c0-8-6-12-14-12 0 8 6 12 14 12z" fill="#fff"/><path d="M24 22c0-7 5-11 12-11 0 7-5 11-12 11z" fill="#fff" opacity=".8"/></svg>',
   chat:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 10h24a4 4 0 0 1 4 4v12a4 4 0 0 1-4 4H20l-8 7v-7H8a4 4 0 0 1-4-4V14a4 4 0 0 1 4-4z" fill="#fff"/><path d="M40 20h0a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4h-2v6l-7-6h-8" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/></svg>',
   tv:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="26" rx="6" fill="#fff"/><path d="M20 16l11 6-11 6z" fill="#7c5cff"/><path d="M16 41h16" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>',
+  learn:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2.6" fill="currentColor"/><circle cx="18" cy="6" r="2.6" fill="currentColor"/><path d="M6 15.4c0-5 12-3.4 12-7.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="1 4.2"/></svg>',
+  practice:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>',
+  words:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6.5" width="13" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 4.5h10.5A2 2 0 0 1 20.5 6.5V15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M7 12.5h6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  grammar:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 12h6M9 16h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  profile:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M4.5 20c.8-4 3.8-5.8 7.5-5.8s6.7 1.8 7.5 5.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  lock:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="3" fill="currentColor"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>',
   check:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   close:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>',
   gear:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
@@ -294,12 +327,12 @@ const NEW_WORDS = {1:['merhaba','evet','hayir','tamam','tesekkur'],2:['bu','ne',
 const COVER_GAIN = {1:4,2:7};
 
 /* ---------- состояние ---------- */
-const S = {screen:'onboard',level:null,done:{},words:[],streak:0,lastDay:null,days:[],goal:1,today:{d:'',n:0},weak:{},remind:{on:false,t:'19:00'},lesson:null,queue:[],i:0,total:0,mistakes:0,answered:false,seen:0};
+const S = {screen:'onboard',tab:'learn',wtab:'mine',level:null,done:{},words:[],streak:0,lastDay:null,days:[],goal:1,today:{d:'',n:0},weak:{},remind:{on:false,t:'19:00'},lesson:null,queue:[],i:0,total:0,mistakes:0,answered:false,seen:0};
 const KEY = 'proto-v4';
 try { const raw = localStorage.getItem(KEY); if (raw) { const o = JSON.parse(raw); Object.assign(S,{level:o.level,done:o.done||{},words:o.words||[],streak:o.streak||0,lastDay:o.lastDay||null,days:o.days||[],goal:o.goal||1,today:o.today||{d:'',n:0},weak:o.weak||{},remind:o.remind||{on:false,t:'19:00'}}); if (o.level) S.screen='home'; } } catch(e){}
 function save(){ try { localStorage.setItem(KEY, JSON.stringify({level:S.level,done:S.done,words:S.words,streak:S.streak,lastDay:S.lastDay,days:S.days,goal:S.goal,today:S.today,weak:S.weak,remind:S.remind})); } catch(e){} }
 function resetProgress(full){
-  S.done={}; S.words=[]; S.streak=0; S.lastDay=null; S.days=[]; S.today={d:'',n:0}; S.weak={}; if(full){ S.level=null; S.screen='onboard'; } else S.screen='home';
+  S.done={}; S.words=[]; S.streak=0; S.lastDay=null; S.days=[]; S.today={d:'',n:0}; S.weak={}; if(full){ S.level=null; S.screen='onboard'; S.tab='learn'; } else S.screen='home';
   try { localStorage.removeItem(KEY); } catch(e){} save(); render();
 }
 const $ = (s,r=document)=>r.querySelector(s);
@@ -362,7 +395,8 @@ function confetti(){
 /* ---------- экраны ---------- */
 function render(){
   document.querySelector('.modal-bg')?.remove();
-  ({onboard,home,lesson:step,done:finish})[S.screen]();
+  app.classList.toggle('withnav', S.screen==='home');
+  ({onboard,home:tabs,lesson:step,done:finish})[S.screen]();
   window.scrollTo(0,0);
 }
 
@@ -381,15 +415,39 @@ function onboard(){
   $('#help').onclick=()=>modal('Опциональный тест','<p class="muted">Здесь будет короткий необязательный тест на 8–10 вопросов. Его можно пропустить: выбор уровня выше всегда остаётся за пользователем.</p>');
 }
 
-function home(){
-  const sres = checkStreak();
+const CHAPTERS = [
+  {n:1,title:'Первый контакт',goal:'Назвать предметы, описать их, сказать «мой» и «твой».'},
+  {n:2,title:'Я и ты',goal:'Представиться, спросить имя и откуда ты.'},
+  {n:3,title:'Что где',goal:'Сказать, что есть и чего нет, где что находится.'},
+  {n:4,title:'Мой день',goal:'Рассказать, что ты делаешь каждый день и прямо сейчас.'},
+  {n:5,title:'Хочу, могу, надо',goal:'Просить, предлагать, договариваться.'},
+  {n:6,title:'Люди вокруг',goal:'Говорить о семье, друзьях и чувствах.'},
+  {n:7,title:'Было и будет',goal:'Рассказать о вчера и завтра.'},
+  {n:8,title:'Первая сцена',goal:'Понять короткую сцену из сериала.'}
+];
+const GRAMMAR = [
+  {unlock:2,title:'Назвать предмет',ex:'Bu ev. — Это дом.',body:'Назвать предмет можно двумя словами: <b>bu</b> («это») + название. Слова «есть» между ними нет: <b>Bu ev</b>, <b>Bu araba</b>.'},
+  {unlock:3,title:'Описать предмет',ex:'Ev büyük. — Дом большой.'},
+  {unlock:4,title:'Много предметов: -ler / -lar',ex:'evler, arabalar'},
+  {unlock:5,title:'«Мой»: окончания',ex:'evim, arabam'},
+  {unlock:7,title:'«Твой»: окончания',ex:'evin, araban'}
+];
+const TABS = [{id:'learn',label:'Учиться'},{id:'practice',label:'Практика'},{id:'words',label:'Слова'},{id:'grammar',label:'Грамматика'},{id:'profile',label:'Профиль'}];
+
+function tabs(){
+  const sres = S.tab==='learn' ? checkStreak() : null;
+  ({learn:learnTab,practice:practiceTab,words:wordsTab,grammar:grammarTab,profile:profileTab})[S.tab]();
+  app.insertAdjacentHTML('beforeend', `<nav class="nav" aria-label="Разделы"><div class="nav-in">${TABS.map(t=>`<button class="tab ${S.tab===t.id?'on':''}" data-tab="${t.id}" aria-label="${t.label}"><span class="ti">${I[t.id]}</span><span>${t.label}</span></button>`).join('')}</div></nav>`);
+  app.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{ if(S.tab!==b.dataset.tab){ S.tab=b.dataset.tab; render(); } });
+  if(sres) setTimeout(()=>comeback(sres.old),350);
+}
+
+function learnTab(){
   const nl = nextLesson(), words = S.words.length, cov = coverage(), dn = Object.keys(S.done).length;
   const C = 2*Math.PI*34, off = C*(1-dn/8);
   app.innerHTML = `
   <div class="top">
     <span class="chip" title="Сколько дней подряд ты занимаешься">${I.flame} ${S.streak} ${S.streak===1?'день':'дн.'} подряд</span>
-    <span class="sp"></span>
-    <button class="icon-btn" id="set" aria-label="Настройки">${I.gear}</button>
   </div>
   <div class="hero pop">
     <svg class="ring" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="9"/><circle cx="42" cy="42" r="34" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-family="Rubik" font-weight="700" font-size="20" fill="#fff">${dn}/8</text></svg>
@@ -403,25 +461,100 @@ function home(){
     <div class="card meter"><span class="tag">Слов знаю</span><div class="big">${words}</div><div class="bar sun"><i style="width:${Math.min(100,words/25*100)}%"></i></div><span class="note">цель главы: 25</span></div>
     <div class="card meter"><span class="tag">Понимаю речи</span><div class="big">~${cov}%</div><div class="bar"><i style="width:${Math.min(100,cov*2.2)}%"></i></div><span class="note">условно, для макета</span></div>
   </div>
-  ${mistakesCard()}
-  <div class="section-h"><h2>Уроки главы</h2><span class="note">${dn} из 8</span></div>
+  <div class="section-h"><h2>Главы</h2><span class="note">глава за главой</span></div>
+  <div class="chap-open"><span class="tag">Глава 1 · ${dn} из 8 уроков</span><h2>Первый контакт</h2></div>
   <div class="path">
     ${LESSONS.map(l=>{
       const st = S.done[l.n] ? 'done' : (nl && nl.n===l.n ? 'current' : 'locked');
       return `<button class="node ${st}" data-n="${l.n}"><span class="circle">${S.done[l.n]?I.check:l.n}</span><span class="t"><b>${l.title}</b><span>${l.sub}</span></span></button>`;
     }).join('')}
   </div>
-  <div class="sticky"><button class="btn ghost" id="rev">Повторить пройденное</button></div>`;
+  <div style="margin-top:8px">
+    ${CHAPTERS.slice(1).map(c=>`<button class="chap locked" data-c="${c.n}"><span class="no">${I.lock}</span><span><b>Глава ${c.n} · ${c.title}</b><span class="d">${c.goal}</span></span></button>`).join('')}
+    <p class="note" style="text-align:center;margin-top:6px">Дальше появятся новые главы</p>
+  </div>`;
   $('#go').onclick=()=>startLesson(nl);
-  $('#set').onclick=settings;
-  $('#rev').onclick=()=>{ if(!S.words.length) return toast('Пока нечего повторять. Пройди первый урок.'); beginQueue({n:0,title:'Повторение'}, quizFor(shuffle(S.words).slice(0,5))); };
-  $('#mis')?.addEventListener('click',()=>startMistakes());
-  if(sres) setTimeout(()=>comeback(sres.old),350);
   app.querySelectorAll('.node').forEach(b=>b.onclick=()=>{
     const l = LESSONS[+b.dataset.n-1];
     if (l.playable) return startLesson(l);
     modal(`Урок ${l.n}. ${l.title}`,`<p class="muted">${l.goal}</p><p class="note">В прототипе этот урок не собран. Он покажет, как работает спираль: повтор прошлого + 1 новая идея.</p>`);
   });
+  app.querySelectorAll('.chap').forEach(b=>b.onclick=()=>{ const c=CHAPTERS[+b.dataset.c-1]; modal(`Глава ${c.n}. ${c.title}`,`<p class="muted">В конце главы ты сможешь: ${c.goal.charAt(0).toLowerCase()+c.goal.slice(1)}</p><p class="note">Главы открываются по порядку. Позже появится короткая проверка, чтобы пропустить главу, которую ты уже знаешь.</p>`); });
+}
+
+function practiceTab(){
+  const n=S.words.length;
+  app.innerHTML = `
+  <div class="top"><h1 style="font-size:26px">Практика</h1></div>
+  <div class="card stack" style="margin-bottom:12px"><span class="tag">Повторение</span>
+    <h3 style="font-size:19px">${n?`${n} ${n===1?'слово':'слов'} в повторении`:'Пока нечего повторять'}</h3>
+    <p class="note">Короткая разминка на пройденных словах.</p>
+    <button class="btn" id="rev" ${n?'':'disabled'}>Повторить пройденное</button></div>
+  ${mistakesCard()}
+  <div class="card" style="margin-top:12px"><span class="tag">Скоро</span>
+    <div class="rowitem"><div><b>Говорение</b><span class="muted">Произнеси фразу, приложение оценит</span></div><span class="soon">скоро</span></div>
+    <div class="rowitem"><div><b>Тренажёры слов</b><span class="muted">Карточки, узнавание, письмо, картинки</span></div><span class="soon">скоро</span></div>
+    <div class="rowitem"><div><b>Диалог с ИИ</b><span class="muted">Только на словах, которые ты уже знаешь</span></div><span class="soon">скоро</span></div>
+  </div>`;
+  $('#rev')?.addEventListener('click',()=>beginQueue({n:0,title:'Повторение'}, quizFor(shuffle(S.words).slice(0,5))));
+  $('#mis')?.addEventListener('click',()=>startMistakes());
+}
+
+function wordsTab(){
+  const t=S.wtab;
+  const list = S.words.length ? S.words.map(w=>`<div class="rowitem"><div><b>${W[w].tr}</b><span class="muted">[${W[w].tx}] · ${W[w].ru}</span></div><button class="speak" data-w="${w}" aria-label="Послушать" style="width:44px;height:44px">${I.play}</button></div>`).join('') : `<p class="muted">Здесь появятся слова, которые ты выучишь в уроках.</p>`;
+  const soon = t==='top' ? ['ТОП-слова','Самые частые слова турецких сериалов: от самых нужных к редким.'] : ['Идиомы и сленг','Живые выражения, которые говорят герои сериалов.'];
+  app.innerHTML = `
+  <div class="top"><h1 style="font-size:26px">Слова</h1></div>
+  <div class="pill-tabs"><button data-t="mine" class="${t==='mine'?'on':''}">Мои слова</button><button data-t="top" class="${t==='top'?'on':''}">ТОП-слова</button><button data-t="idioms" class="${t==='idioms'?'on':''}">Идиомы</button></div>
+  <div class="card">${t==='mine'?`<span class="tag">Слов выучено: ${S.words.length}</span>${list}`:`<span class="soon">скоро</span><h3 style="margin-top:10px">${soon[0]}</h3><p class="muted" style="margin-top:6px">${soon[1]}</p>`}</div>`;
+  app.querySelectorAll('.pill-tabs button').forEach(b=>b.onclick=()=>{ S.wtab=b.dataset.t; render(); });
+  app.querySelectorAll('.speak[data-w]').forEach(b=>b.onclick=()=>speak(W[b.dataset.w].tr));
+}
+
+function grammarTab(){
+  app.innerHTML = `
+  <div class="top"><h1 style="font-size:26px">Грамматика</h1></div>
+  <p class="muted" style="margin-bottom:12px">Правила из пройденных уроков. Открываются по мере обучения.</p>
+  <div>${GRAMMAR.map((g,i)=>{ const open=!!S.done[g.unlock]; return `<button class="chap ${open?'':'locked'}" data-g="${i}"><span class="no">${open?I.check:I.lock}</span><span><b>${g.title}</b><span class="d">${open?g.ex:'Откроется после урока '+g.unlock}</span></span></button>`; }).join('')}</div>`;
+  app.querySelectorAll('.chap').forEach(b=>b.onclick=()=>{ const g=GRAMMAR[+b.dataset.g]; if(!S.done[g.unlock]) return modal(g.title,`<p class="muted">Откроется после урока ${g.unlock}.</p>`); modal(g.title,`<p>${g.body||g.ex}</p>`); });
+}
+
+function profileTab(){
+  const lv={zero:'С нуля',some:'Что-то знаю',most:'Понимаю, но не всё'}[S.level]||'';
+  app.innerHTML = `
+  <div class="top"><h1 style="font-size:26px">Профиль</h1></div>
+  <div class="card avatar" style="margin-bottom:12px">${mascot('happy',64)}<div><b style="font-family:var(--font-display);font-size:18px">Твой путь</b><div class="muted">Уровень: ${lv}</div></div></div>
+  <div class="pstats" style="margin-bottom:12px">
+    <div class="card stat"><b>${S.streak}</b><span>дней подряд</span></div>
+    <div class="card stat"><b>${S.words.length}</b><span>слов</span></div>
+    <div class="card stat"><b>${Object.keys(S.done).length}</b><span>уроков</span></div>
+  </div>
+  <div class="card stack">
+    <div class="set-h">Цель на день</div>
+    <div class="seg" id="goal">${[1,2,3].map(g=>`<button data-g="${g}" class="${S.goal===g?'on':''}">${g} ${g===1?'занятие':'занятия'}</button>`).join('')}</div>
+    <div class="set-h">Напоминание</div>
+    <div class="seg" id="rm"><button data-r="0" class="${S.remind.on?'':'on'}">Выкл</button><button data-r="1" class="${S.remind.on?'on':''}">Вкл</button></div>
+    ${S.remind.on?`<div class="seg" id="rt">${['09:00','13:00','19:00','21:00'].map(t=>`<button data-t="${t}" class="${S.remind.t===t?'on':''}">${t}</button>`).join('')}</div>`:''}
+    <p class="note">В приложении будет мягкое напоминание в выбранное время. В прототипе уведомлений нет.</p>
+  </div>
+  <div class="card stack" style="margin-top:12px"><span class="tag">Подписка</span><p class="muted">Здесь будет информация о подписке и бесплатном доступе.</p><span class="soon" style="align-self:flex-start">скоро</span></div>
+  <div class="card stack" style="margin-top:12px"><div class="set-h">Данные прототипа</div>
+    <button class="btn ghost" id="chlv">Сменить уровень</button>
+    <button class="btn ghost" id="rs1">Сбросить прогресс</button>
+    <p class="note">Прогресс — это пройденные уроки, слова, дни подряд и «понимание речи». Выбранный уровень сохранится.</p>
+    <button class="btn ghost" id="rs2">Начать с нуля и выбрать уровень заново</button>
+    <details><summary>Только для проверки прототипа</summary>
+      <button class="btn ghost" id="sk1" style="margin-top:10px">Пропустить один день</button>
+      <p class="note" style="margin-top:8px">Показывает, что будет, если не заниматься день: счётчик «дней подряд» начнётся заново.</p></details>
+  </div>`;
+  document.querySelectorAll('#goal button').forEach(b=>b.onclick=()=>{ S.goal=+b.dataset.g; save(); render(); });
+  document.querySelectorAll('#rm button').forEach(b=>b.onclick=()=>{ S.remind.on=b.dataset.r==='1'; save(); render(); });
+  document.querySelectorAll('#rt button').forEach(b=>b.onclick=()=>{ S.remind.t=b.dataset.t; save(); render(); });
+  $('#chlv').onclick=()=>{ S.screen='onboard'; render(); };
+  const ask=(id,full,label)=>{ $(id).onclick=()=>{ const b=$(id); if(b.dataset.armed){ resetProgress(full); toast('Готово: начинаем с нуля'); return; } b.dataset.armed=1; b.className='btn danger'; b.textContent='Точно сбросить? Нажми ещё раз'; setTimeout(()=>{ if(b.isConnected){ delete b.dataset.armed; b.className='btn ghost'; b.textContent=label; } },4000); }; };
+  ask('#rs1',false,'Сбросить прогресс'); ask('#rs2',true,'Начать с нуля и выбрать уровень заново');
+  $('#sk1').onclick=()=>{ if(!S.lastDay) return toast('Сначала пройди хотя бы одно занятие.'); S.lastDay=shiftDays(S.lastDay,-2); S.today={d:'',n:0}; save(); S.tab='learn'; render(); };
 }
 
 function todayCard(){
@@ -445,32 +578,6 @@ function startMistakes(){ const ids=Object.keys(S.weak).slice(0,6); if(!ids.leng
 function comeback(old){
   modal('С возвращением!', `<div class="row">${mascot('happy',72)}<p class="muted">Ты занимался ${old} дн. подряд. Счётчик начался заново, но уроки и слова остались. Начнём с лёгкой разминки на пару минут.</p></div><button class="btn" id="cb">Разминка</button>`, true);
   $('#cb').onclick=()=>{ document.querySelector('.modal-bg')?.remove(); if(S.words.length) beginQueue({n:0,title:'Повторение'}, quizFor(shuffle(S.words).slice(0,4))); else startLesson(nextLesson()); };
-}
-
-function settings(){
-  modal('Настройки прототипа', `
-    <div class="set-h">Цель на день</div>
-    <div class="seg" id="goal">${[1,2,3].map(g=>`<button data-g="${g}" class="${S.goal===g?'on':''}">${g} ${g===1?'занятие':'занятия'}</button>`).join('')}</div>
-    <div class="set-h">Напоминание</div>
-    <div class="seg" id="rm"><button data-r="0" class="${S.remind.on?'':'on'}">Выкл</button><button data-r="1" class="${S.remind.on?'on':''}">Вкл</button></div>
-    ${S.remind.on?`<div class="seg" id="rt">${['09:00','13:00','19:00','21:00'].map(t=>`<button data-t="${t}" class="${S.remind.t===t?'on':''}">${t}</button>`).join('')}</div>`:''}
-    <p class="note">В приложении будет мягкое напоминание в выбранное время. В прототипе уведомлений нет.</p>
-    <div class="set-h">Демо</div>
-    <button class="btn ghost" id="sk1">Пропустить один день</button>
-    <p class="note">Показывает, что будет, если не заниматься день: счётчик «дней подряд» начнётся заново.</p>
-    <div class="set-h">Данные</div>
-    <button class="btn ghost" id="chlv">Сменить уровень</button>
-    <button class="btn ghost" id="rs1">Сбросить прогресс</button>
-    <p class="note">Прогресс — это пройденные уроки, слова, дни подряд и «понимание речи». Выбранный уровень сохранится.</p>
-    <button class="btn ghost" id="rs2">Начать с нуля и выбрать уровень заново</button>`, true);
-  $('#chlv').onclick=()=>{ S.screen='onboard'; render(); };
-  document.querySelectorAll('#goal button').forEach(b=>b.onclick=()=>{ S.goal=+b.dataset.g; save(); settings(); });
-  document.querySelectorAll('#rm button').forEach(b=>b.onclick=()=>{ S.remind.on=b.dataset.r==='1'; save(); settings(); });
-  document.querySelectorAll('#rt button').forEach(b=>b.onclick=()=>{ S.remind.t=b.dataset.t; save(); settings(); });
-  const skip=n=>{ if(!S.lastDay) return toast('Сначала пройди хотя бы одно занятие.'); S.lastDay=shiftDays(S.lastDay,-(n+1)); S.today={d:'',n:0}; save(); S.screen='home'; render(); };
-  $('#sk1').onclick=()=>skip(1);
-  const ask=(id,full,label)=>{ $(id).onclick=()=>{ const b=$(id); if(b.dataset.armed){ resetProgress(full); toast('Готово: начинаем с нуля'); return; } b.dataset.armed=1; b.className='btn danger'; b.textContent='Точно сбросить? Нажми ещё раз'; setTimeout(()=>{ if(b.isConnected){ delete b.dataset.armed; b.className='btn ghost'; b.textContent=label; } },4000); }; };
-  ask('#rs1',false,'Сбросить прогресс'); ask('#rs2',true,'Начать с нуля и выбрать уровень заново');
 }
 
 function startLesson(l){ if(!l) return; if(!l.playable) return modal(`Урок ${l.n}. ${l.title}`,`<p class="muted">${l.goal}</p>`); beginQueue(l, STEPS[l.n].map(x=>({...x}))); }
