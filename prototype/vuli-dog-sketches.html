@@ -1,0 +1,92 @@
+<title>Vuli: наброски собаки</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Rubik:wght@500;600;700&display=swap">
+<style>
+/* Три оригинальных наброска собаки Vuli на карточках в палитре приложения. */
+:root{--bg:#eef0ff;--surface:#ffffff;--ink:#17194a;--muted:#5e6499;--line:#dfe3f8;--violet:#6a49f5;--mint:#19d3a5;--soft:#f3f1ff;--font-d:"Rubik","Nunito",system-ui,sans-serif;--font-b:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0f1230;--surface:#171c46;--ink:#eef0ff;--muted:#a9b0da;--line:#2a3160;--violet:#8b6dff;--mint:#2ee6b8;--soft:#1f2557;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1230;--surface:#171c46;--ink:#eef0ff;--muted:#a9b0da;--line:#2a3160;--violet:#8b6dff;--mint:#2ee6b8;--soft:#1f2557;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;padding-inline:16px;background:var(--bg);color:var(--ink);font-family:var(--font-b);font-size:16px;line-height:1.5;font-weight:600}
+main{max-width:880px;margin:0 auto;padding-block:28px 56px}
+h1,h2{font-family:var(--font-d);line-height:1.15;text-wrap:balance}
+h1{font-size:30px;margin:0 0 8px}
+h2{font-size:20px;margin:0}
+.lead{color:var(--muted);max-width:60ch;margin:0 0 22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.art{background:var(--soft);border-radius:20px;display:grid;place-items:center;padding:10px}
+.art svg{width:100%;max-width:220px;height:auto}
+.tag{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.card p{margin:0;color:var(--muted);font-size:15px}
+.say{display:flex;align-items:center;gap:12px;margin-top:22px;background:var(--surface);border:1.5px solid var(--line);border-radius:24px;padding:14px 16px}
+.say svg{width:68px;height:68px;flex:none}
+.bubble{background:var(--soft);border-radius:18px 18px 18px 6px;padding:10px 14px;font-family:var(--font-d);font-weight:500;font-size:18px}
+.bubble small{display:block;font-family:var(--font-b);color:var(--muted);font-size:13px;font-weight:700}
+</style>
+<main>
+<h1>Vuli: наброски собаки</h1>
+<p class="lead">Vuli — и название приложения, и имя собаки. Ниже три оригинальных варианта характера. Выберите, какой ближе, и я доведу его: выражения, поза «радуется», «думает», «грустит» и экран в прототипе.</p>
+<div class="grid">
+  <div class="card"><span class="tag">Вариант А</span><h2>Ушастый</h2>
+    <div class="art"><svg viewBox="0 0 200 200" aria-label="Собака с висячими ушами">
+      <ellipse cx="50" cy="112" rx="17" ry="40" transform="rotate(10 50 112)" fill="#8a5a33"/>
+      <ellipse cx="150" cy="112" rx="17" ry="40" transform="rotate(-10 150 112)" fill="#8a5a33"/>
+      <circle cx="100" cy="104" r="52" fill="#f0bf86"/>
+      <path d="M100 54 C92 70 92 84 100 96 C108 84 108 70 100 54Z" fill="#fff4e0"/>
+      <ellipse cx="100" cy="130" rx="31" ry="23" fill="#fbe7c9"/>
+      <circle cx="79" cy="100" r="8" fill="#2b2a6b"/><circle cx="121" cy="100" r="8" fill="#2b2a6b"/>
+      <circle cx="82" cy="97" r="2.6" fill="#fff"/><circle cx="124" cy="97" r="2.6" fill="#fff"/>
+      <ellipse cx="100" cy="120" rx="10" ry="7.5" fill="#2b2a6b"/>
+      <path d="M100 127v7M100 134q-9 8-17 2M100 134q9 8 17 2" fill="none" stroke="#2b2a6b" stroke-width="3" stroke-linecap="round"/>
+      <path d="M95 138q5 15 10 0z" fill="#ff7a8a"/>
+      <path d="M62 152q38 24 76 0" fill="none" stroke="#6a49f5" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="100" cy="168" r="9" fill="#19d3a5"/><text x="100" y="172.5" text-anchor="middle" font-family="Rubik, sans-serif" font-weight="700" font-size="12" fill="#06362d">V</text>
+    </svg></div>
+    <p>Мягкий, добродушный. Висячие уши намекают на «хорошо слушает». Хорошо для спокойного, дружелюбного тона.</p>
+  </div>
+  <div class="card"><span class="tag">Вариант Б</span><h2>Остроухий</h2>
+    <div class="art"><svg viewBox="0 0 200 200" aria-label="Собака с острыми ушами">
+      <polygon points="58,74 62,22 98,56" fill="#e59a52"/><polygon points="66,64 68,38 86,56" fill="#f7c9c0"/>
+      <polygon points="142,74 138,22 102,56" fill="#e59a52"/><polygon points="134,64 132,38 114,56" fill="#f7c9c0"/>
+      <circle cx="100" cy="108" r="50" fill="#e59a52"/>
+      <ellipse cx="100" cy="128" rx="36" ry="27" fill="#fff4e4"/>
+      <circle cx="79" cy="100" r="8" fill="#2b2a6b"/><circle cx="121" cy="100" r="8" fill="#2b2a6b"/>
+      <circle cx="82" cy="97" r="2.6" fill="#fff"/><circle cx="124" cy="97" r="2.6" fill="#fff"/>
+      <ellipse cx="100" cy="120" rx="9" ry="7" fill="#2b2a6b"/>
+      <path d="M100 127v6M100 133q-9 8-17 2M100 133q9 8 17 2" fill="none" stroke="#2b2a6b" stroke-width="3" stroke-linecap="round"/>
+      <path d="M95 137q5 14 10 0z" fill="#ff7a8a"/>
+      <path d="M64 150q36 22 72 0" fill="none" stroke="#19d3a5" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="100" cy="166" r="9" fill="#6a49f5"/><text x="100" y="170.5" text-anchor="middle" font-family="Rubik, sans-serif" font-weight="700" font-size="12" fill="#fff">V</text>
+    </svg></div>
+    <p>Бодрый, любопытный. Торчащие уши — внимание и энергия. Хорошо для живого, шустрого тона.</p>
+  </div>
+  <div class="card"><span class="tag">Вариант В</span><h2>Пушистый</h2>
+    <div class="art"><svg viewBox="0 0 200 200" aria-label="Пушистый щенок"><g id="fluff" fill="#fff1d6"></g>
+      <ellipse cx="66" cy="62" rx="14" ry="22" transform="rotate(-28 66 62)" fill="#c98e5b"/>
+      <ellipse cx="134" cy="62" rx="14" ry="22" transform="rotate(28 134 62)" fill="#c98e5b"/>
+      <circle cx="100" cy="108" r="48" fill="#fff1d6"/>
+      <ellipse cx="100" cy="128" rx="28" ry="20" fill="#ffe3b8"/>
+      <circle cx="80" cy="102" r="8" fill="#2b2a6b"/><circle cx="120" cy="102" r="8" fill="#2b2a6b"/>
+      <circle cx="83" cy="99" r="2.6" fill="#fff"/><circle cx="123" cy="99" r="2.6" fill="#fff"/>
+      <ellipse cx="100" cy="120" rx="8.5" ry="6.5" fill="#2b2a6b"/>
+      <path d="M100 126v6M100 132q-8 7-15 2M100 132q8 7 15 2" fill="none" stroke="#2b2a6b" stroke-width="3" stroke-linecap="round"/>
+      <path d="M95 136q5 13 10 0z" fill="#ff7a8a"/>
+      <circle cx="68" cy="118" r="6" fill="#ffb3b3" opacity=".6"/><circle cx="132" cy="118" r="6" fill="#ffb3b3" opacity=".6"/>
+      <path d="M66 152q34 20 68 0" fill="none" stroke="#6a49f5" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="100" cy="166" r="9" fill="#19d3a5"/><text x="100" y="170.5" text-anchor="middle" font-family="Rubik, sans-serif" font-weight="700" font-size="12" fill="#06362d">V</text>
+    </svg></div>
+    <p>Самый «милый». Пушистая шерсть делает собаку похожей на игрушку. Хорошо для детской и тёплой подачи.</p>
+  </div>
+</div>
+<div class="say">
+  <svg viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="104" r="52" fill="#f0bf86"/><ellipse cx="50" cy="112" rx="17" ry="40" transform="rotate(10 50 112)" fill="#8a5a33"/><ellipse cx="150" cy="112" rx="17" ry="40" transform="rotate(-10 150 112)" fill="#8a5a33"/><circle cx="100" cy="104" r="52" fill="#f0bf86"/><ellipse cx="100" cy="130" rx="31" ry="23" fill="#fbe7c9"/><circle cx="79" cy="100" r="8" fill="#2b2a6b"/><circle cx="121" cy="100" r="8" fill="#2b2a6b"/><ellipse cx="100" cy="120" rx="10" ry="7.5" fill="#2b2a6b"/><path d="M100 127v7M100 134q-9 8-17 2M100 134q9 8 17 2" fill="none" stroke="#2b2a6b" stroke-width="3" stroke-linecap="round"/></svg>
+  <div class="bubble">Merhaba! Я Vuli.<small>Привет! Я Vuli.</small></div>
+</div>
+</main>
+<script>
+(function(){
+  var g=document.getElementById('fluff'); if(!g) return;
+  for(var a=0;a<360;a+=30){var r=a*Math.PI/180;var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',(100+46*Math.cos(r)).toFixed(1));c.setAttribute('cy',(108+44*Math.sin(r)).toFixed(1));c.setAttribute('r','15');g.appendChild(c);}
+})();
+</script>
