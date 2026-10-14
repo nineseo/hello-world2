@@ -10,6 +10,7 @@
 4. `docs/09-server-and-claude-code-setup.md` (сервер и безопасность)
 5. `docs/10-tasks.md` (задачи по порядку)
 6. `prototype/lessons-1-2.html` (дизайн и логика уроков 1–2)
+7. `docs/12-vuli-character-for-web.md` и `prototype/assets/vuli/` (персонаж Vuli, картинки и анимация)
 
 ## Правила
 - Работай по задачам из `docs/10-tasks.md`: одна задача за раз. После задачи: обнови `docs/02-decisions.md`, отметь задачу, сделай коммит с понятным сообщением.

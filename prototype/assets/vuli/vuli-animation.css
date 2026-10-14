@@ -1,0 +1,17 @@
+/* Анимация Vuli. Поза «радуется» собирается из одной картинки: основа + слой хвоста + слой глаз.
+   Остальные позы: лёгкое дыхание/покачивание/прыжок. Пример разметки: prototype/lessons-1-2.html, функция mascot(). */
+.vwrap{position:relative;display:block;flex:none}
+.vwrap img,.vwrap svg{position:absolute;inset:0;width:100%;height:100%}
+.vuli{transform-origin:50% 100%;animation:breathe 3.2s ease-in-out infinite}
+.vuli-cheer{animation:hop 1.1s ease-in-out infinite}
+.vuli-think{animation:sway 3.6s ease-in-out infinite}
+/* слой хвоста: та же картинка, обрезана до области хвоста (в долях картинки) и вращается вокруг основания хвоста */
+.vtail{clip-path:inset(58.5% 74.8% 12.8% 0);transform-origin:22% 75%;animation:wagt 1.2s ease-in-out infinite}
+/* слой «закрытые глаза»: SVG viewBox 0 0 318 453 (в пикселях картинки happy.webp); появляется на ~0,3 с раз в 4,6 с */
+.vblink{opacity:0;animation:blink 4.6s infinite}
+@keyframes breathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.012,1.035)}}
+@keyframes hop{0%,100%{transform:translateY(0) scale(1,1)}40%{transform:translateY(-14px) scale(.98,1.03)}55%{transform:translateY(0) scale(1.04,.96)}}
+@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes wagt{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(5deg)}}
+@keyframes blink{0%,91%,100%{opacity:0}93%,97%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.vuli,.vtail,.vblink{animation:none!important}}

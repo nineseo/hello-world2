@@ -88,6 +88,7 @@ p { margin: 0; }
 /* home */
 .top { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
 .top .sp { flex: 1; }
+.vhome { margin: -6px 2px -14px 0; }
 .hero { background: linear-gradient(135deg, #6f4cff 0%, #4a6bff 55%, #26c6da 120%); border-radius: 32px; padding: 20px; color: #fff; position: relative; overflow: hidden; border: 0; }
 .hero::after { content: ""; position: absolute; width: 220px; height: 220px; border-radius: 50%; right: -70px; top: -80px; background: rgba(255,255,255,.14); }
 .hero { margin-bottom: 14px; }
@@ -469,6 +470,7 @@ function learnTab(){
   <div class="top">
     <span class="chip" title="Сколько дней подряд ты занимаешься">${I.flame} ${S.streak} ${S.streak===1?'день':'дн.'} подряд</span>
     <span class="chip" title="Очки опыта за занятия">${I.star} ${S.xp} XP</span>
+    <span class="sp"></span><span class="vhome">${mascot('happy',92)}</span>
   </div>
   <div class="hero pop">
     <svg class="ring" viewBox="0 0 84 84" aria-hidden="true"><circle cx="42" cy="42" r="34" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="9"/><circle cx="42" cy="42" r="34" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" font-family="Rubik" font-weight="700" font-size="20" fill="#fff">${dn}/8</text></svg>
