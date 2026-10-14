@@ -2,7 +2,8 @@
 # Первичная настройка нового сервера Ubuntu 24.04. Запускать ОДИН раз от root.
 # НЕ ТЕСТИРОВАНО на реальном сервере: прочитайте скрипт перед запуском.
 # Что делает: обновляет систему, ставит Docker и базовую защиту, создаёт
-# обычного пользователя vuli с вашим SSH-ключом, запрещает вход root и вход по паролю.
+# обычного пользователя vuli с вашим SSH-ключом, настраивает режим входа по SSH
+# (вы выбираете строгость) и создаёт каталог /srv/git для репозиториев.
 set -euo pipefail
 
 NEW_USER="${NEW_USER:-vuli}"
@@ -43,13 +44,25 @@ ufw allow 80/tcp
 ufw allow 443/tcp
 ufw --force enable
 
-# Защита SSH: без root и без паролей.
-cat > /etc/ssh/sshd_config.d/99-vuli-hardening.conf <<'CONF'
-PermitRootLogin no
-PasswordAuthentication no
-PubkeyAuthentication yes
-CONF
+# Режим доступа по SSH (решает владелец).
+echo
+echo "Режим входа по SSH:"
+echo "  1 = строгий: без root и без паролей (рекомендуется)"
+echo "  2 = root разрешён только по ключу, пароли отключены"
+echo "  3 = как есть: root и пароли разрешены (рискованно: ваш сервер будут подбирать боты;"
+echo "      нужен очень длинный пароль root, fail2ban включён)"
+read -rp "Выберите 1, 2 или 3 [1]: " SSH_MODE
+SSH_MODE="${SSH_MODE:-1}"
+case "$SSH_MODE" in
+  1) printf 'PermitRootLogin no\nPasswordAuthentication no\nPubkeyAuthentication yes\n' > /etc/ssh/sshd_config.d/99-vuli-hardening.conf ;;
+  2) printf 'PermitRootLogin prohibit-password\nPasswordAuthentication no\nPubkeyAuthentication yes\n' > /etc/ssh/sshd_config.d/99-vuli-hardening.conf ;;
+  3) rm -f /etc/ssh/sshd_config.d/99-vuli-hardening.conf; echo "ВНИМАНИЕ: SSH оставлен без усиления." ;;
+  *) echo "Нужно выбрать 1, 2 или 3." >&2; exit 1 ;;
+esac
 sshd -t
+
+# Каталог для git-репозиториев на сервере.
+install -d -m 750 -o "$NEW_USER" -g "$NEW_USER" /srv/git
 
 systemctl enable --now fail2ban
 dpkg-reconfigure -f noninteractive unattended-upgrades
@@ -60,5 +73,6 @@ cat <<MSG
 
 Готово. ВАЖНО: не закрывайте эту консоль.
 Откройте второе окно и проверьте вход:  ssh ${NEW_USER}@<IP-сервера>
+(в режиме 2 и 3 можно проверить и root)
 Только если вход работает, закрывайте root-сессию.
 MSG
