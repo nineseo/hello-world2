@@ -48,3 +48,6 @@
 - Каркас v1 одобрен помощницей (`docs/06-v1-scope-for-review.md`, `prototype/lessons-1-2.html`).
 - Следующий шаг: закрытая веб-версия на staging.vulilang.com. Бриф: `docs/07-site-build-brief.md`. Что делает владелец: `docs/08-owner-checklist.md`.
 - Открыто: выбор образа собаки (варианты в `prototype/vuli-dog-sketches.html`), консультация юриста, значение слова «vuli» (суахили подтверждено; фиджи — проверить).
+
+## Как переносить работу в Claude Code на сервере
+См. `docs/09-server-and-claude-code-setup.md` (схемы, шаги, безопасность), `docs/10-tasks.md` (задачи), `server/bootstrap-server.sh` (первичная настройка сервера), `templates/vuli-repo/CLAUDE.md` (файл для нового репозитория).
