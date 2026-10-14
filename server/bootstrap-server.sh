@@ -35,6 +35,13 @@ chown "$NEW_USER:$NEW_USER" "/home/$NEW_USER/.ssh/authorized_keys"
 chmod 600 "/home/$NEW_USER/.ssh/authorized_keys"
 # Группа docker даёт почти права root (замечание по безопасности: см. docs/09).
 usermod -aG docker "$NEW_USER"
+usermod -aG sudo "$NEW_USER"
+read -rp "Разрешить пользователю $NEW_USER выполнять sudo (действия от root) без пароля? [y/N]: " SUDO_NOPASS
+if [ "${SUDO_NOPASS:-n}" = "y" ] || [ "${SUDO_NOPASS:-n}" = "Y" ]; then
+  echo "$NEW_USER ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/90-vuli
+  chmod 440 /etc/sudoers.d/90-vuli
+  visudo -cf /etc/sudoers.d/90-vuli
+fi
 
 # Фаервол: только SSH, HTTP, HTTPS.
 ufw default deny incoming
