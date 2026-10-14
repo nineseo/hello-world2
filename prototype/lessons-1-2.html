@@ -301,7 +301,7 @@ function mascot(mood='happy', size=64){
   if(m!=='happy') return `<img class="vuli vuli-${m}" src="${src}" alt="Vuli" height="${size}" style="height:${size}px;width:auto;display:block">`;
   /* живая поза: хвост виляет, глаза моргают, тело дышит (слои собраны из одной картинки) */
   const eye=(x,y)=>`<circle cx="${x}" cy="${y}" r="17" fill="url(#vp)"/><path d="M${x-10} ${y-1} q10 9 20 0" fill="none" stroke="#23224f" stroke-width="3.2" stroke-linecap="round"/>`;
-  return `<span class="vwrap vuli vuli-happy" style="height:${size}px;aspect-ratio:318/453"><img src="${src}" alt="Vuli"><img class="vtail" src="${src}" alt="" aria-hidden="true"><svg class="vblink" viewBox="0 0 318 453" aria-hidden="true"><defs><radialGradient id="vp"><stop offset="0" stop-color="#f4f0e4"/><stop offset=".55" stop-color="#f4f0e4"/><stop offset="1" stop-color="#f4f0e4" stop-opacity="0"/></radialGradient></defs>${eye(157,160)}${eye(232,144)}</svg></span>`;
+  return `<span class="vwrap vuli vuli-happy" style="height:${size}px;width:${Math.round(size*318/453)}px;flex:none"><img src="${src}" alt="Vuli"><img class="vtail" src="${src}" alt="" aria-hidden="true"><svg class="vblink" viewBox="0 0 318 453" aria-hidden="true"><defs><radialGradient id="vp"><stop offset="0" stop-color="#f4f0e4"/><stop offset=".55" stop-color="#f4f0e4"/><stop offset="1" stop-color="#f4f0e4" stop-opacity="0"/></radialGradient></defs>${eye(157,160)}${eye(232,144)}</svg></span>`;
 }
 const SCENE_SVG = '<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><circle cx="262" cy="40" r="22" fill="#ffe27a" opacity=".85"/><rect y="150" width="320" height="50" fill="#14134a" opacity=".35"/><circle cx="92" cy="84" r="28" fill="#ffd9b8"/><path d="M62 70c4-28 54-28 62 0-15-9-46-9-62 0z" fill="#3b2a24"/><rect x="62" y="112" width="60" height="72" rx="24" fill="#ff5d6c"/><circle cx="82" cy="86" r="2.8" fill="#14134a"/><circle cx="100" cy="86" r="2.8" fill="#14134a"/><path d="M85 99q7 6 14 0" stroke="#14134a" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="236" cy="88" r="28" fill="#f3c9a0"/><path d="M206 82c2-32 60-32 60 4-19-15-40-15-60-4z" fill="#14134a"/><rect x="206" y="116" width="60" height="68" rx="24" fill="#ffc93c"/><circle cx="226" cy="91" r="2.8" fill="#14134a"/><circle cx="244" cy="91" r="2.8" fill="#14134a"/><path d="M229 103q7 6 14 0" stroke="#14134a" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>';
 
@@ -423,7 +423,7 @@ function render(){
 function onboard(){
   app.innerHTML = `
   <div class="stack pop" style="margin-top:3vh;gap:16px">
-    <div class="row" style="justify-content:space-between"><span class="tag">Прототип · приватный</span><span class="bob">${mascot('happy',72)}</span></div>
+    <div class="row" style="justify-content:space-between"><span class="tag">Прототип · приватный</span><span class="bob">${mascot('happy',120)}</span></div>
     <h1 class="hero-title">Выучи язык, нажимая <em>«Продолжить»</em></h1>
     <p class="muted">С чего начнём? Это можно поменять в любой момент.</p>
     <button class="level" data-l="zero"><span class="ic" style="background:linear-gradient(135deg,#2ee6b8,#17a883)">${I.sprout}</span><div><b>С нуля</b><span class="muted">Ничего не знаю, начну с первых слов</span></div></button>
